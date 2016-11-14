@@ -12,10 +12,10 @@ public class Gestor {
     private ArrayList<String> pesquisas;
     private String importFileName;
     private String exportFileName;
-    private String[] menu_principal = {"Listagens"}
+    private static String[] menuPrincipal = {"Listagens"};
 
     public static void main(String[] args) {
-        while(1) {
+        while(true) {
             menu();
         }
     }
@@ -40,12 +40,12 @@ public class Gestor {
 
     }
 
-    public void menu() {
+    public static void menu() {
 
         int menu1;
         System.out.println("--- Gestor de Exames ---" + "\n\n");
-        for(int i=0; i < menu_principal.length; ++i) {
-            System.out.println("(" + i + ") " + menu_principal[i]);
+        for(int i=0; i < menuPrincipal.length; ++i) {
+            System.out.println("(" + i + ") " + menuPrincipal[i]);
         }
     }
 }
