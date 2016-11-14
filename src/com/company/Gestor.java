@@ -1,6 +1,7 @@
 package com.company;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Gestor {
 
@@ -8,11 +9,11 @@ public class Gestor {
     private ArrayList<Pessoa> pessoas;
     private ArrayList<Curso> cursos;
     private ArrayList<Sala> salas;
-    private ArrayList<String> listagens;
-    private ArrayList<String> pesquisas;
+    private ArrayList<String> historico;
     private String importFileName;
     private String exportFileName;
-    private static String[] menuPrincipal = {"Listagens"};
+    private static String[] menuPrincipal = {"Listar", "Criar Exames", "Configurar Exames", "Lancar notas" , "Sair"};
+    private static String[] menuListar = {"Listar Exames", "Listar Alunos Inscritos Exame Classificacoes"};
 
     public static void main(String[] args) {
         while(true) {
@@ -41,11 +42,23 @@ public class Gestor {
     }
 
     public static void menu() {
+        Scanner sc = new Scanner(System.in);
 
-        int menu1;
         System.out.println("--- Gestor de Exames ---" + "\n\n");
-        for(int i=0; i < menuPrincipal.length; ++i) {
-            System.out.println("(" + i + ") " + menuPrincipal[i]);
+        printMenu(menuPrincipal);
+        System.out.print("Opcao: ");
+        switch (sc.nextInt()) {
+            case 0:
+                printMenu(menuListar);
+                break;
+        }
+
+
+    }
+
+    public static void printMenu(String[] menu) {
+        for(int i=0; i < menu.length; ++i) {
+            System.out.println("[" + i + "] " + menu[i]);
         }
     }
 }
