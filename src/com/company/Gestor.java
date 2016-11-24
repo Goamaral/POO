@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 public class Gestor {
 
-    private ArrayList<Exame> exames;
+    private static ArrayList<Exame> exames;
     private ArrayList<Pessoa> pessoas;
     private ArrayList<Curso> cursos;
     private ArrayList<Sala> salas;
@@ -22,7 +22,9 @@ public class Gestor {
     }
 
     public static void listarExames() {
-
+        for(int i=0;i<exames.size();++i) {
+            System.out.println(exames.get(i));
+        }
     }
 
     public static void listarAlunosInscritosExameClassificacoes() {
@@ -91,6 +93,10 @@ public class Gestor {
                     default:
                         break;
                 }
+                break;
+            //Criar Exames
+            case 1:
+
                 break;
             //Sair
             case 4:
