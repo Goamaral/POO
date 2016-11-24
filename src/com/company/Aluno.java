@@ -5,6 +5,7 @@ import java.util.ArrayList;
 /**
  * Created by the-unicorn on 10-11-2016.
  */
+
 public class Aluno extends Pessoa {
     private int numAluno;
     private Curso curso;
@@ -12,7 +13,7 @@ public class Aluno extends Pessoa {
     private String regime;
 
     public void listarClassificacoes(ArrayList<Exame> exames) {
-
+        
     }
 
     public int getNumAluno() {

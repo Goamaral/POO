@@ -5,12 +5,15 @@ import java.util.ArrayList;
 /**
  * Created by the-unicorn on 10-11-2016.
  */
+
 public class Funcionario extends Pessoa {
     private int numMecanografico;
     private String categoria;
 
     public void listarExames(ArrayList<Exame> exames) {
-
+        for(int i = 0; i < exames.size(); i++){
+            System.out.println(exames.get(i).imprimirInformacaoExame());
+        }
     }
 
     public Funcionario() {}

@@ -6,6 +6,7 @@ import java.util.Date;
 /**
  * Created by the-unicorn on 10-11-2016.
  */
+
 public abstract class Exame {
     private Disciplina disciplina;
     private IntervaloTempo data;
@@ -14,7 +15,11 @@ public abstract class Exame {
     private ArrayList<FuncionarioDocente> vigilantes;
     private ArrayList<FuncionarioNaoDocente> assistentes;
     private ArrayList<InscritoExame> resultados;
-
+    
+    public String imprimirInformacaoExame(){
+        return "Disciplina: " + disciplina.getNome() + "\nData: " + data.getInicio().toString() + "\nSala: " + sala.getId();
+    }
+    
     public boolean verificarAlunoInscritoDisciplina(Aluno aluno, Disciplina disciplina) {
          return true;
     }

@@ -51,6 +51,9 @@ public class Gestor {
             case 0:
                 printMenu(menuListar);
                 break;
+                
+            case 4:
+                System.exit(0);
         }
 
 
