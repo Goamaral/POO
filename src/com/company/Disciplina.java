@@ -11,6 +11,7 @@ public class Disciplina {
     private ArrayList<FuncionarioDocente> outrosDocentes;
     private ArrayList<Aluno> alunosInscritos;
 
+    //CONSTRUCTOR
     public Disciplina(String nome, FuncionarioDocente responsavel, ArrayList<FuncionarioDocente> outrosDocentes, ArrayList<Aluno> alunosInscritos) {
         this.nome = nome;
         this.responsavel = responsavel;
@@ -18,34 +19,28 @@ public class Disciplina {
         this.alunosInscritos = alunosInscritos;
     }
 
+    //GETS
     public String getNome() {
         return nome;
     }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
     public FuncionarioDocente getResponsavel() {
         return responsavel;
     }
-
-    public void setResponsavel(FuncionarioDocente responsavel) {
-        this.responsavel = responsavel;
-    }
-
     public ArrayList<FuncionarioDocente> getOutrosDocentes() {
         return outrosDocentes;
     }
-
-    public void setOutrosDocentes(ArrayList<FuncionarioDocente> outrosDocentes) {
-        this.outrosDocentes = outrosDocentes;
-    }
-
     public ArrayList<Aluno> getAlunosInscritos() {
         return alunosInscritos;
     }
 
+    //SETS
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+    public void setResponsavel(FuncionarioDocente responsavel) {
+        this.responsavel = responsavel;
+    }
+    public void setOutrosDocentes(ArrayList<FuncionarioDocente> outrosDocentes) { this.outrosDocentes = outrosDocentes; }
     public void setAlunosInscritos(ArrayList<Aluno> alunosInscritos) {
         this.alunosInscritos = alunosInscritos;
     }
