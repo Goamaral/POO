@@ -15,6 +15,30 @@ public abstract class Exame {
     private ArrayList<FuncionarioDocente> vigilantes;
     private ArrayList<FuncionarioNaoDocente> assistentes;
     private ArrayList<InscritoExame> resultados;
+
+    public Disciplina getDisciplina() {
+        return disciplina;
+    }
+
+    public void setDisciplina(Disciplina disciplina) {
+        this.disciplina = disciplina;
+    }
+
+    public IntervaloTempo getData() {
+        return data;
+    }
+
+    public void setData(IntervaloTempo data) {
+        this.data = data;
+    }
+
+    public Sala getSala() {
+        return sala;
+    }
+
+    public void setSala(Sala sala) {
+        this.sala = sala;
+    }
     
     public String imprimirInformacaoExame(){
         return "Disciplina: " + disciplina.getNome() + "\nData: " + data.getInicio().toString() + "\nSala: " + sala.getId();

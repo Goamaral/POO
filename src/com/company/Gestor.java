@@ -61,16 +61,19 @@ public class Gestor {
                 System.out.println("[6] Menu principal");
                 System.out.print("\nOpcao: ");
                 switch (sc.nextInt()) {
+                    
                     //Listar exames
                     case 0:
                         System.out.println("\n--- Listar Exames ---");
                         listarExames();
                         break;
+                        
                     //Listar alunos inscritos num exame
                     case 1:
                         System.out.println("\n--- Listar alunos inscritos num exame ---");
                         listarAlunosInscritosExameClassificacoes();
                         break;
+                        
                     //Listar exames de um aluno
                     case 2:
                         System.out.println("\n--- Listar exames de um aluno ---");
@@ -90,6 +93,19 @@ public class Gestor {
                                 break;
                         }
                         break;
+                    
+                    case 3:
+                        System.out.println("---Listar funcionarios de um exame---");
+                        break;
+                    
+                    case 4:
+                        System.out.println("---Listar exames de um funcionario---");
+                        break;
+                        
+                    case 5:
+                        System.out.println("---Listar notas---");
+                        break;
+                        
                     default:
                         break;
                 }
@@ -106,12 +122,7 @@ public class Gestor {
             default:
                 System.out.println("Opcao invalida");
                 break;
-                
-            case 4:
-                System.exit(0);
         }
-
-
     }
 
     public static void printMenu(String[] menu) {
