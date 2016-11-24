@@ -106,6 +106,9 @@ public class Gestor {
             default:
                 System.out.println("Opcao invalida");
                 break;
+                
+            case 4:
+                System.exit(0);
         }
 
 
