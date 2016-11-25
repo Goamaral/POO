@@ -11,8 +11,8 @@ public class Funcionario extends Pessoa {
     private String categoria;
 
     public void listarExames(ArrayList<Exame> exames) {
-        for(int i = 0; i < exames.size(); i++){
-            System.out.println(exames.get(i).imprimirInformacaoExame());
+        for(Exame exame : exames){
+            System.out.println("Disciplina: " + exame.getDisciplina().getNome() + "\nData: " + exame.getData().getInicio().toString() + "\nSala: " + exame.getSala().getId() + "\n");
         }
     }
 
@@ -40,3 +40,4 @@ public class Funcionario extends Pessoa {
         this.categoria = categoria;
     }
 }
+
