@@ -8,4 +8,8 @@ public class ExameEspecial extends Exame {
         if( aluno.getRegime().equals("Especial") ) return true;
         else return false;
     }
+
+    public String getEpoca() {
+        return "Especial";
+    }
 }

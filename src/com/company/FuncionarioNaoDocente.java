@@ -6,8 +6,13 @@ package com.company;
 public class FuncionarioNaoDocente extends Funcionario {
     private String cargo;
 
+    public String getCargo() {
+        return cargo;
+    }
+
     public FuncionarioNaoDocente(String nome, String email, int numMecanografico, String categoria, String cargo) {
         super(nome, email, numMecanografico, categoria);
         this.cargo = cargo;
+
     }
 }

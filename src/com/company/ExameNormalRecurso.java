@@ -7,4 +7,8 @@ public class ExameNormalRecurso extends Exame {
     public boolean verificarAcessoExame(Aluno aluno) {
         return true;
     }
+
+    public String getEpoca() {
+        return "Recurso";
+    }
 }

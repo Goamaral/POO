@@ -136,6 +136,22 @@ public abstract class Exame {
         return resultados;
     }
     public Sala getSala() { return sala; }
+    public ArrayList<FuncionarioNaoDocente> getAssistentes() {
+        return assistentes;
+    }
+
+    public FuncionarioDocente getDocenteResponsavel() {
+        return docenteResponsavel;
+    }
+
+    public ArrayList<FuncionarioDocente> getVigilantes() {
+
+        return vigilantes;
+    }
+
+    public String getEpoca() {
+        return "Especial";
+    }
 
     //SETS
     public boolean setHoras(Calendar inicio, int duracao){
