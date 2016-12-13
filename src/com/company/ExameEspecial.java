@@ -5,7 +5,7 @@ package com.company;
  */
 public class ExameEspecial extends Exame {
     public boolean verificarAcessoExame(Aluno aluno) {
-        return true;
+        if( aluno.getRegime().equals("Especial") ) return true;
+        else return false;
     }
-
 }

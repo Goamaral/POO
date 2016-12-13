@@ -1,7 +1,7 @@
 package com.company;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.Random;
 
 /**
@@ -82,17 +82,26 @@ public abstract class Exame {
         }
     }
 
-    //INCOMPLETE
+    //TEST
     public void inserirDocente(FuncionarioDocente docente) {
         if( vigilantes.contains(docente) || docenteResponsavel.equals(docente) ) {
             System.out.println("Docente é o docente responsavel ou já pertence ao grupo de vigilantes");
         } else {
-            docente.verificarDisponibilidade(data);
+            if(docente.preencherHorario(data)) {
+                vigilantes.add(docente);
+            } else {
+                System.out.println("Docente nao esta disponivel");
+            }
         }
     }
 
+    //TEST
     public void inserirFuncionario(FuncionarioNaoDocente funcionario) {
-
+        if( assistentes.contains(funcionario) ) {
+            System.out.println("Funcionario ja pertence ao grupo de assistentes");
+        } else {
+            assistentes.add(funcionario);
+        }
     }
 
     //ABSTRACT METHODS
@@ -112,11 +121,10 @@ public abstract class Exame {
         this.resultados = resultados;
     }
     //NORMAL CONSTRUCTOR
-    public Exame(Disciplina disciplina, Sala sala, FuncionarioDocente docenteResponsavel, Date inicio, int duracao) {
+    public Exame(Disciplina disciplina, Sala sala, FuncionarioDocente docenteResponsavel) {
         this.disciplina = disciplina;
         this.sala = sala;
         this.docenteResponsavel = docenteResponsavel;
-        this.sala.inserirIntervalo(inicio, duracao);
     }
 
     //GETS
@@ -127,8 +135,12 @@ public abstract class Exame {
     public ArrayList<InscritoExame> getResultados() {
         return resultados;
     }
+    public Sala getSala() { return sala; }
 
     //SETS
+    public boolean setHoras(Calendar inicio, int duracao){
+        return sala.inserirIntervalo(inicio, duracao);
+    };
     public void setDisciplina(Disciplina disciplina) {
         this.disciplina = disciplina;
     }

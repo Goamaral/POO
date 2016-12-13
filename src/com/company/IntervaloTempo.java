@@ -1,6 +1,6 @@
 package com.company;
 
-import java.util.Date;
+import java.util.Calendar;
 
 /**
  * Created by the-unicorn on 10-11-2016.
@@ -8,41 +8,41 @@ import java.util.Date;
 
 public class IntervaloTempo {
     
-    private Date inicio;
-    private Date fim;
+    private Calendar inicio;
+    private Calendar fim;
     private int duracao;
-    
-    public Date getInicio() {
-        return inicio;
+
+    //CONSTRUCTOR
+    public IntervaloTempo(Calendar inicio, int duracao) {
+        this.inicio = inicio;
+        this.duracao = duracao;
+        setFim();
     }
 
-    public void setInicio(Date inicio) {
+    //PRIVATE METHODS
+    //TEST
+    private void setFim() {
+        fim = (Calendar)inicio.clone();
+        fim.add(inicio.MINUTE, duracao);
+    }
+
+    //SETS
+    public void setInicio(Calendar inicio) {
         this.inicio = inicio;
     }
-
-    public Date getFim() {
-        return fim;
-    }
-
-    public void setFim(Date fim) {
+    public void setFim(Calendar fim) {
         this.fim = fim;
     }
-
-    public int getDuracao() {
-        return duracao;
-    }
-
     public void setDuracao(int duracao) {
         this.duracao = duracao;
     }
 
-    private void setFim() {
-        /*fim = inicio + duracao*/
+    //GETS
+    public Calendar getInicio() { return inicio; }
+    public Calendar getFim() {
+        return fim;
     }
-
-    public IntervaloTempo(Date inicio, int duracao) {
-        this.inicio = inicio;
-        this.duracao = duracao;
-        setFim();
+    public int getDuracao() {
+        return duracao;
     }
 }

@@ -2,9 +2,6 @@ package com.company;
 
 import java.util.ArrayList;
 
-/**
- * Created by the-unicorn on 10-11-2016.
- */
 public class Disciplina {
     private String nome;
     private FuncionarioDocente responsavel;

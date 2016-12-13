@@ -2,9 +2,6 @@ package com.company;
 
 import java.util.ArrayList;
 
-/**
- * Created by the-unicorn on 10-11-2016.
- */
 public class Curso {
     private String nome;
     private int duracao;

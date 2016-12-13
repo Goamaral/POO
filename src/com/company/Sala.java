@@ -1,11 +1,8 @@
 package com.company;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
 
-/**
- * Created by the-unicorn on 10-11-2016.
- */
 public class Sala {
     private ArrayList<IntervaloTempo> horasOcupadas;
     private String id;
@@ -18,12 +15,43 @@ public class Sala {
         this.id = id;
     }
 
-    public boolean verificarDisponibilidade(IntervaloTempo intervalo) {
-        return true;
-    }
+    //TEST
+    public boolean inserirIntervalo(Calendar inicio, int duracao) {
+        IntervaloTempo intervalo = new IntervaloTempo(inicio, duracao);
+        IntervaloTempo auxNext;
+        int i=0;
 
-    public void inserirIntervalo(Date inicio, int duracao) {
+        for(IntervaloTempo aux : horasOcupadas) {
+            //Inserir no inicio
+            if(i==0) {
+                //Se o inicio de aux for depois do fim de intervalo
+                if(aux.getInicio().compareTo(intervalo.getFim()) >= 0) {
+                    //Adicionar intervalo ao inicio da fila
+                    horasOcupadas.add(0, intervalo);
+                    return true;
+                }
+            }
 
+            //Inserir no meio
+            //Se o fim de aux for antes do inicio de intervalo
+            if(aux.getFim().compareTo(intervalo.getInicio()) <= 0) {
+                //Inserir no fim
+                if(horasOcupadas.size() == i+1) {
+                    //Adicionar no fim da lista
+                    horasOcupadas.add(i+1, intervalo);
+                    return true;
+                }
+                auxNext = horasOcupadas.get(i+1);
+                //Se o inicio de aux + 1 for maior que o fim de intervalo
+                if(auxNext.getInicio().compareTo(intervalo.getFim()) >= 0) {
+                    horasOcupadas.add(i+1, intervalo);
+                    return true;
+                }
+            }
+
+            ++i;
+        }
+        return false;
     }
 
     public Sala(ArrayList<IntervaloTempo> horasOcupadas, String id) {
