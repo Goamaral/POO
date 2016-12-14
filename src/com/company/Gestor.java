@@ -18,44 +18,19 @@ public class Gestor {
     private static String[] menuConfigurarExame = {"Editar vigilantes", "Editar assistentes", "Editar aluno"};
 
     public static void main(String[] args) {
-        Calendar inicio = Calendar.getInstance();
-        inicio.set(2017, 1, 5, 10, 30, 45);
-        IntervaloTempo t1 = new IntervaloTempo(inicio, 30);
-        FuncionarioDocente resp = new FuncionarioDocente("Prof1", "email1@domain", 1, "assistente", "sistemas de informação");
-        FuncionarioDocente doc = new FuncionarioDocente("Prof2", "email2@domain", 2, "assistente", "sistemas de informação");
-        doc.preencherHorario(t1);
-        resp.preencherHorario(t1);
-        ArrayList<FuncionarioDocente> docs = new ArrayList<>();
-        docs.add(doc);
-        Disciplina d1 = new Disciplina("POO", resp, docs);
-        ArrayList<Disciplina> ds1 = new ArrayList<>();
-        ds1.add(d1);
-        Curso c1 = new Curso("Engenharia Informatica", 3, "Licenciatura", ds1);
-        Aluno a1 = new Aluno("Goa", "goa.docs@gmail.com", 26111997, c1, 2, "Normal");
-        d1.inscreverAluno(a1);
-        FuncionarioNaoDocente f1 = new FuncionarioNaoDocente("Fun1", "email3@domain", 3, "assistente opereacional", "secretaria");
 
-        cursos.add(c1);
-        pessoas.add(resp);
-        pessoas.add(doc);
-        pessoas.add(a1);
-        pessoas.add(f1);
+        try {
+            carregarDados();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-        Sala s1 = new Sala("G5.1");
-        Sala s2 = new Sala("G5.2");
-        Exame e1 = new ExameNormalRecurso(d1, s1, resp, t1, "Normal");
-        Exame e2 = new ExameEspecial(d1, s2, resp, t1);
-
-        exames.add(e1);
-        exames.add(e2);
 
         try {
             guardarDados();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        carregarDados();
 
         sair();
         while(true) {
@@ -968,7 +943,6 @@ public class Gestor {
         }
     }
 
-
     private static void guardarDados() throws IOException {
         FileWriter cursosFile =  new FileWriter("cursos.txt");
         for(Curso curso : cursos) {
@@ -998,8 +972,49 @@ public class Gestor {
 
     }
 
-    private static void carregarDados() {
+    private static void carregarDados() throws IOException {
+        FileReader cursosFile = new FileReader("cursos.txt");
+        BufferedReader cursosBuffer = new BufferedReader(cursosFile);
+        String line;
+        Curso curso = null;
+        String nomeCurso = "Erro";
+        int duracaoCurso = -1;
+        String grauConfereCurso = "Erro";
+        ArrayList<Disciplina> disciplinas = new ArrayList<>();
+        String nomeDisciplina = "Erro";
+        int numResponsavel;
+        FuncionarioDocente responsavelDisciplina;
+        String[] catcher;
+        int a = 0;
+        ArrayList<FuncionarioDocente> outrosDocentes;
 
+        while ((line = cursosBuffer.readLine()) != null) {
+            if(line.charAt(0) != '\t') {
+                if(a>0) {
+                    //TODO -> Continue
+                    disciplinas.add( new Disciplina(nomeDisciplina, responsavelDisciplina, outrosDocentes).inscreverAluno(new Aluno()) );
+                    cursos.add( new Curso(nomeCurso, duracaoCurso, grauConfereCurso, disciplinas) );
+                    disciplinas = new ArrayList<>();
+                }
+                catcher = line.split("|");
+                nomeCurso = catcher[0];
+                duracaoCurso = Integer.parseInt(catcher[1]);
+                grauConfereCurso = catcher[2];
+                ++a;
+            } else if(line.charAt(0) == '\t' && line.charAt(1) != '\t') {
+                catcher = line.split("|");
+                nomeDisciplina = catcher[0];
+                numResponsavel = Integer.parseInt(catcher[1]);
+                //TODO -> obter resposavel com o numero
+            } else if(line.charAt(0) == '\t' && line.charAt(1) == '\t') {
+                catcher = line.split("|");
+
+            }
+
+            System.out.println(line);
+        }
+
+        cursosFile.close();
     }
 
     private static void sair() {
