@@ -1,41 +1,50 @@
 package com.company;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Scanner;
+
+import static java.lang.Character.isLetter;
 
 public class Gestor {
     //TODO -> protect inputs
     private static ArrayList<Exame> exames;
-    private ArrayList<Pessoa> pessoas;
-    private ArrayList<Curso> cursos;
+    private static ArrayList<Pessoa> pessoas;
+    private static ArrayList<Curso> cursos;
     private ArrayList<Sala> salas;
     private ArrayList<String> historico;
     private String importFileName;
     private String exportFileName;
     private static String[] menuPrincipal = {"Listar", "Criar exames", "Configurar exames", "Lancar notas" , "Sair"};
     private static String[] menuListar = {"Listar exames", "Listar alunos inscritos num exame", "Listar exames de um aluno", "Listar funcionarios de um exame", "Listar exames de um funcionario", "Listar notas"};
+    private static String[] menuConfigurarExame = {"Editar vigilantes", "Editar assistentes", "Editar aluno"};
 
     public static void main(String[] args) {
-        while(true) menu();
+        while(true) {
+            if(menu() == 0) {
+                break;
+            }
+        }
+        sair();
     }
 
-    public static void listarExames() {
+    private static void listarExames() {
         //Imprimir exames
         for (Exame exame : exames) {
-            System.out.printf("%s, %s, %s, %s, %s, %s, %s, %s, %s",
+            System.out.printf("%s, %s, %s, %s, %s, %s, %s",
                     exame.getEpoca(), exame.getDisciplina().getNome(), exame.getData().getInicio(), exame.getData().getDuracao(),
                     exame.getSala().getId(), exame.getVigilantes().size(), exame.getResultados().size());
         }
     }
 
-    public static Exame escolhaListaExames() {
+    private static Exame escolhaListaExames() {
         int i = 0;
         int opcaoInteger;
         Scanner scanner = new Scanner(System.in);
 
         //Imprimir exames
         for (Exame exame : exames) {
-            System.out.printf("[%d] %s, %s, %s, %s, %s, %s, %s, %s, %s",
+            System.out.printf("[%d] %s, %s, %s, %s, %s, %s, %s",
                     i, exame.getEpoca(), exame.getDisciplina().getNome(), exame.getData().getInicio(), exame.getData().getDuracao(),
                     exame.getSala().getId(), exame.getVigilantes().size(), exame.getResultados().size());
             ++i;
@@ -57,7 +66,7 @@ public class Gestor {
         }
     }
 
-    public static void listarAlunosInscritosExame(Exame exame) {
+    private static void listarAlunosInscritosExame(Exame exame) {
         for (InscritoExame inscritoExame : exame.getResultados()) {
             System.out.println(inscritoExame.getAluno().getNumAluno() +
                     " " + inscritoExame.getAluno().getNome() +
@@ -68,32 +77,31 @@ public class Gestor {
         }
     }
 
-    public static ArrayList<Aluno> getAlunos() {
+    private static ArrayList<Aluno> getAlunos() {
         ArrayList<Aluno> out = new ArrayList<>();
 
         for(Exame exame : exames) {
-            for(InscritoExame inscritoExame : exame.getResultados()) {
-                if(!out.contains(inscritoExame.getAluno())) {
-                    out.add(inscritoExame.getAluno());
-                }
-            }
+            ArrayList<InscritoExame> resultados = exame.getResultados();
+            for (InscritoExame inscritoExame : resultados)
+                if (!out.contains(inscritoExame.getAluno())) out.add(inscritoExame.getAluno());
         }
 
         return out;
     }
 
-    public static Aluno escolhaListaAlunos() {
+    private static Aluno escolhaListaAlunos() {
         int i = 0;
         int opcaoInteger;
         Scanner scanner = new Scanner(System.in);
         ArrayList<Aluno> alunos = getAlunos();
 
         for(Aluno aluno : alunos) {
-            System.out.println(aluno.getNumAluno() +
+            System.out.println("[" + i + "]" + aluno.getNumAluno() +
                     " " + aluno.getNome() +
                     " ano: " + aluno.getAno() +
                     " curso: " + aluno.getCurso().getNome() +
                     " regime: " + aluno.getRegime());
+            ++i;
         }
 
         System.out.print("Opcao: ");
@@ -112,7 +120,7 @@ public class Gestor {
         }
     }
 
-    public static void listarExamesAluno(Aluno aluno) {
+    private static void listarExamesAluno(Aluno aluno) {
         for(Exame exame : exames) {
             for(InscritoExame inscritoExame : exame.getResultados()) {
                 if(inscritoExame.getAluno().equals(aluno)) {
@@ -124,7 +132,7 @@ public class Gestor {
         }
     }
 
-    public static boolean examesDisponiveis() {
+    private static boolean examesDisponiveis() {
         if(exames == null) {
             System.out.println("Nao existem exames no sistema");
             return false;
@@ -132,7 +140,7 @@ public class Gestor {
         return true;
     }
 
-    public static void listarFuncionariosExame(Exame exame) {
+    private static void listarFuncionariosExame(Exame exame) {
         System.out.println("Responsavel:");
         System.out.println(exame.getDocenteResponsavel().getNumMecanografico() + " "
                 + exame.getDocenteResponsavel().getNome() + " "
@@ -159,7 +167,7 @@ public class Gestor {
         }
     }
 
-    public static ArrayList<Funcionario> getFuncionarios() {
+    private static ArrayList<Funcionario> getFuncionarios() {
         ArrayList<Funcionario> out = new ArrayList<>();
 
         for(Exame exame : exames) {
@@ -179,7 +187,7 @@ public class Gestor {
         return out;
     }
 
-    public static Funcionario escolhaListaFuncionarios() {
+    private static Funcionario escolhaListaFuncionarios() {
         int i = 0;
         int opcaoInteger;
         Scanner scanner = new Scanner(System.in);
@@ -220,7 +228,7 @@ public class Gestor {
         }
     }
 
-    public static void listarExamesFuncionario(Funcionario funcionario) {
+    private static void listarExamesFuncionario(Funcionario funcionario) {
         for(Exame exame : exames) {
             if(funcionario instanceof FuncionarioDocente) {
                 if (exame.getDocenteResponsavel().equals(funcionario)) {
@@ -262,6 +270,665 @@ public class Gestor {
         }
     }
 
+    private static ArrayList<FuncionarioDocente> getDocentesPessoas() {
+        ArrayList<FuncionarioDocente> out = new ArrayList<>();
+
+        for(Pessoa pessoa : pessoas) {
+            if(pessoa instanceof FuncionarioDocente) {
+                out.add((FuncionarioDocente) pessoa);
+            }
+        }
+
+        if(out.size()>0) {
+            return out;
+        }
+
+        return null;
+    }
+
+    private static FuncionarioDocente criarDocente() {
+        FuncionarioDocente out;
+        Scanner sc = new Scanner(System.in);
+        String infoString, nome, email,categoria, areaDeInvestigacao;
+        String[] infoArray;
+        int numMecanografico, opcao;
+        String[] menuCategoria = {"Assistente", "Auxiliar", "Associado", "Catedratico"};
+        String[] menuAreaInvestigacao = {"sistemas de informação", "comunicação e telemática", "engenharia de software"};
+
+        while(true){
+            System.out.println("Para voltar ao menu principal envie uma resposta vazia");
+            System.out.print("Nome: ");
+            nome = sc.nextLine();
+
+            if(nome.equals("")) {
+                return null;
+            }
+
+            //Verificar nome valido
+            for (char c : nome.toCharArray()) {
+                //Pode conter letras e espaços
+                if (!isLetter(c) && c != ' ') {
+                    System.out.println("Nome invalido");
+                    continue;
+                }
+            }
+
+            //Passou todos os testes
+            break;
+        }
+
+        while(true) {
+            System.out.println("Para voltar ao menu principal envie uma resposta vazia");
+            System.out.print("Email: ");
+            email = sc.nextLine();
+
+            if(email.equals("")) {
+                return null;
+            }
+
+            infoArray = email.split("@");
+
+            //So pode conter um @
+            if(infoArray.length != 2) {
+                System.out.println("Email invalido");
+            }
+
+            //Passou todos os testes
+            break;
+        }
+
+        while(true) {
+            System.out.println("Para voltar ao menu principal envie uma resposta vazia");
+            System.out.print("Numero Mecanografico: ");
+
+            infoString = sc.nextLine();
+
+            if(email.equals("")) {
+                return null;
+            }
+
+            try {
+                numMecanografico = Integer.parseInt(infoString);
+            } catch (NumberFormatException e) {
+                System.out.println("Apenas podem ser inseridos numeros");
+                continue;
+            }
+
+            //Passou todos os testes
+            break;
+        }
+
+        while (true) {
+            System.out.println("Para voltar ao menu principal envie uma resposta vazia");
+            System.out.println("Escolha uma categoria:");
+            printMenu(menuCategoria);
+
+            infoString = sc.nextLine();
+
+            if(infoString.equals("")) {
+                return null;
+            }
+
+            try {
+                opcao = Integer.parseInt(infoString);
+            } catch (NumberFormatException e) {
+                System.out.println("Opcao invalida");
+                continue;
+            }
+
+            try {
+                categoria = menuCategoria[opcao];
+            } catch(IndexOutOfBoundsException e) {
+                System.out.println("Opcao invalida");
+                continue;
+            }
+
+            //Passou todos os testes
+            break;
+        }
+
+        while(true) {
+            System.out.println("Para voltar ao menu principal envie uma resposta vazia");
+            System.out.println("Escolha uma area de investigacao:");
+            printMenu(menuAreaInvestigacao);
+
+            infoString = sc.nextLine();
+
+            if(infoString.equals("")) {
+                return null;
+            }
+
+            try {
+                opcao = Integer.parseInt(infoString);
+            } catch (NumberFormatException e) {
+                System.out.println("Opcao invalida");
+                continue;
+            }
+
+            try {
+                areaDeInvestigacao = menuCategoria[opcao];
+            } catch(IndexOutOfBoundsException e) {
+                System.out.println("Opcao invalida");
+                continue;
+            }
+
+            //Passou todos os testes
+            break;
+        }
+
+
+        out = new FuncionarioDocente(nome, email, numMecanografico, categoria, areaDeInvestigacao);
+
+        if(!pessoas.contains(out)) {
+            pessoas.add(out);
+        } else {
+            System.out.println("Docente já existe");
+        }
+
+        return out;
+    }
+
+    private static FuncionarioDocente escolhaVigilanteListaPessoas() {
+        Scanner sc = new Scanner(System.in);
+        int i = 0;
+        int opcao;
+        ArrayList<FuncionarioDocente> funcionarioDocentes = getDocentesPessoas();
+
+        if(funcionarioDocentes == null) {
+            return null;
+        }
+
+        for(FuncionarioDocente funcionarioDocente : funcionarioDocentes) {
+                System.out.println("[" + i + "] " + funcionarioDocente.getNumMecanografico() + " "
+                        + funcionarioDocente.getNome() + " "
+                        + funcionarioDocente.getCategoria() + " "
+                        + funcionarioDocente.getAreaDeInvestigacao() + " "
+                        + funcionarioDocente.getEmail());
+
+                ++i;
+        }
+
+        System.out.println("[" + i + "] Criar docente");
+        System.out.print("Opcao: ");
+
+        try {
+            opcao = Integer.parseInt(sc.nextLine());
+        } catch (NumberFormatException e) {
+            System.out.println("Opcao invalida");
+            return null;
+        }
+
+        try {
+            return funcionarioDocentes.get(opcao);
+        } catch(ArrayIndexOutOfBoundsException e) {
+            //ultima opcao
+            if(opcao == funcionarioDocentes.size()) {
+                return criarDocente();
+            }
+            System.out.println("Opcao invalida");
+            return null;
+        }
+    }
+
+    private static ArrayList<FuncionarioNaoDocente> getAssistentesPessoas() {
+        ArrayList<FuncionarioNaoDocente> out = new ArrayList<>();
+
+        for(Pessoa pessoa : pessoas) {
+            if(pessoa instanceof FuncionarioNaoDocente) {
+                out.add((FuncionarioNaoDocente) pessoa);
+            }
+        }
+
+        if(out.size()>0) {
+            return out;
+        }
+
+        return null;
+    }
+
+    private static FuncionarioNaoDocente criarAssistente() {
+        FuncionarioNaoDocente out;
+        Scanner sc = new Scanner(System.in);
+        String infoString, nome, email,categoria, cargo;
+        String[] infoArray;
+        int numMecanografico, opcao;
+        String[] menuCategoria = {"assistente operacional", "assistente técnico", "técnico superior","técnico de informática", "especialista de informática"};
+        String[] menuCargo = {"secretaria", "financeiro", "apoio técnico"};
+
+        while(true){
+            System.out.println("Para voltar ao menu principal envie uma resposta vazia");
+            System.out.print("Nome: ");
+            nome = sc.nextLine();
+
+            if(nome.equals("")) {
+                return null;
+            }
+
+            //Verificar nome valido
+            for (char c : nome.toCharArray()) {
+                //Pode conter letras e espaços
+                if (!isLetter(c) && c != ' ') {
+                    System.out.println("Nome invalido");
+                    continue;
+                }
+            }
+
+            //Passou todos os testes
+            break;
+        }
+
+        while(true) {
+            System.out.println("Para voltar ao menu principal envie uma resposta vazia");
+            System.out.print("Email: ");
+            email = sc.nextLine();
+
+            if(email.equals("")) {
+                return null;
+            }
+
+            infoArray = email.split("@");
+
+            //So pode conter um @
+            if(infoArray.length != 2) {
+                System.out.println("Email invalido");
+            }
+
+            //Passou todos os testes
+            break;
+        }
+
+        while(true) {
+            System.out.println("Para voltar ao menu principal envie uma resposta vazia");
+            System.out.print("Numero Mecanografico: ");
+
+            infoString = sc.nextLine();
+
+            if(email.equals("")) {
+                return null;
+            }
+
+            try {
+                numMecanografico = Integer.parseInt(infoString);
+            } catch (NumberFormatException e) {
+                System.out.println("Apenas podem ser inseridos numeros");
+                continue;
+            }
+
+            //Passou todos os testes
+            break;
+        }
+
+        while (true) {
+            System.out.println("Para voltar ao menu principal envie uma resposta vazia");
+            System.out.println("Escolha uma categoria:");
+            printMenu(menuCategoria);
+
+            infoString = sc.nextLine();
+
+            if(infoString.equals("")) {
+                return null;
+            }
+
+            try {
+                opcao = Integer.parseInt(infoString);
+            } catch (NumberFormatException e) {
+                System.out.println("Opcao invalida");
+                continue;
+            }
+
+            try {
+                categoria = menuCategoria[opcao];
+            } catch(IndexOutOfBoundsException e) {
+                System.out.println("Opcao invalida");
+                continue;
+            }
+
+            //Passou todos os testes
+            break;
+        }
+
+        while(true) {
+            System.out.println("Para voltar ao menu principal envie uma resposta vazia");
+            System.out.println("Escolha uma area de investigacao:");
+            printMenu(menuCargo);
+
+            infoString = sc.nextLine();
+
+            if(infoString.equals("")) {
+                return null;
+            }
+
+            try {
+                opcao = Integer.parseInt(infoString);
+            } catch (NumberFormatException e) {
+                System.out.println("Opcao invalida");
+                continue;
+            }
+
+            try {
+                cargo = menuCategoria[opcao];
+            } catch(IndexOutOfBoundsException e) {
+                System.out.println("Opcao invalida");
+                continue;
+            }
+
+            //Passou todos os testes
+            break;
+        }
+
+
+        out = new FuncionarioNaoDocente(nome, email, numMecanografico, categoria, cargo);
+
+        if(!pessoas.contains(out)) {
+            pessoas.add(out);
+        } else {
+            System.out.println("Assistente já existe");
+        }
+
+        return out;
+    }
+
+    private static FuncionarioNaoDocente escolhaAssistenteListaPessoas() {
+        Scanner sc = new Scanner(System.in);
+        int i = 0;
+        int opcao;
+        ArrayList<FuncionarioNaoDocente> funcionarioNaoDocentes = getAssistentesPessoas();
+
+        if(funcionarioNaoDocentes == null) {
+            return null;
+        }
+
+        for(FuncionarioNaoDocente funcionarioNaoDocente : funcionarioNaoDocentes) {
+            System.out.println("[" + i + "] " + funcionarioNaoDocente.getNumMecanografico() + " "
+                    + funcionarioNaoDocente.getNome() + " "
+                    + funcionarioNaoDocente.getCategoria() + " "
+                    + funcionarioNaoDocente.getCargo() + " "
+                    + funcionarioNaoDocente.getEmail());
+
+            ++i;
+        }
+
+        System.out.println("[" + i + "] Criar assistente");
+        System.out.print("Opcao: ");
+
+        try {
+            opcao = Integer.parseInt(sc.nextLine());
+        } catch (NumberFormatException e) {
+            System.out.println("Opcao invalida");
+            return null;
+        }
+
+        try {
+            return funcionarioNaoDocentes.get(opcao);
+        } catch(ArrayIndexOutOfBoundsException e) {
+            //ultima opcao
+            if(opcao == funcionarioNaoDocentes.size()) {
+                return criarAssistente();
+            }
+            System.out.println("Opcao invalida");
+            return null;
+        }
+    }
+
+    private static ArrayList<Aluno> getAlunosPessoas() {
+        ArrayList<Aluno> out = new ArrayList<>();
+
+        for(Pessoa pessoa : pessoas) {
+            if(pessoa instanceof Aluno) {
+                out.add((Aluno) pessoa);
+            }
+        }
+
+        if(out.size()>0) {
+            return out;
+        }
+
+        return null;
+    }
+
+    private static ArrayList<Curso> getCursosComDisciplina(Disciplina disciplina) {
+        ArrayList<Curso> out = new ArrayList<>();
+
+        for(Curso curso : cursos) {
+            if(curso.getDisciplinas().contains(disciplina)) {
+                out.add(curso);
+            }
+        }
+
+        if(cursos.size()==0) {
+            return null;
+        }
+
+        return out;
+    }
+
+    private static Curso escolhaListaCursosComDisciplina(Disciplina disciplina) {
+        int i = 0;
+        int opcaoInteger;
+        Scanner scanner = new Scanner(System.in);
+        ArrayList<Curso> cursos = getCursosComDisciplina(disciplina);
+
+        if(cursos == null) {
+            return new Curso();
+        }
+
+        for(Curso curso : cursos) {
+            System.out.println("[" + i + "] " + curso.toString());
+            ++i;
+        }
+
+        System.out.print("Opcao: ");
+        try {
+            opcaoInteger = Integer.parseInt(scanner.nextLine());
+        } catch (NumberFormatException e) {
+            System.out.println("Insira uma opcao valida");
+            return null;
+        }
+
+        try {
+            return cursos.get(opcaoInteger);
+        } catch (IndexOutOfBoundsException e) {
+            System.out.println("Insira uma opcao valida");
+            return null;
+        }
+    }
+
+    private static Aluno criarAluno(Disciplina disciplina) {
+        Aluno out;
+        Scanner sc = new Scanner(System.in);
+        String infoString, nome, email, regime;
+        String[] infoArray;
+        int numMecanografico, opcao, ano;
+        Curso curso;
+        String[] menuRegime = {"normal", "trabalhador-estudante", "atleta", "dirigente associativo","aluno de Erasmus"};
+
+        while(true){
+            System.out.println("Para voltar ao menu principal envie uma resposta vazia");
+            System.out.print("Nome: ");
+            nome = sc.nextLine();
+
+            if(nome.equals("")) {
+                return null;
+            }
+
+            //Verificar nome valido
+            for (char c : nome.toCharArray()) {
+                //Pode conter letras e espaços
+                if (!isLetter(c) && c != ' ') {
+                    System.out.println("Nome invalido");
+                    continue;
+                }
+            }
+
+            //Passou todos os testes
+            break;
+        }
+
+        while(true) {
+            System.out.println("Para voltar ao menu principal envie uma resposta vazia");
+            System.out.print("Email: ");
+            email = sc.nextLine();
+
+            if(email.equals("")) {
+                return null;
+            }
+
+            infoArray = email.split("@");
+
+            //So pode conter um @
+            if(infoArray.length != 2) {
+                System.out.println("Email invalido");
+            }
+
+            //Passou todos os testes
+            break;
+        }
+
+        while(true) {
+            System.out.println("Para voltar ao menu principal envie uma resposta vazia");
+            System.out.print("Numero Mecanografico: ");
+
+            infoString = sc.nextLine();
+
+            if(email.equals("")) {
+                return null;
+            }
+
+            try {
+                numMecanografico = Integer.parseInt(infoString);
+            } catch (NumberFormatException e) {
+                System.out.println("Apenas podem ser inseridos numeros");
+                continue;
+            }
+
+            //Passou todos os testes
+            break;
+        }
+
+        while (true) {
+            System.out.println("Para voltar ao menu principal envie uma resposta vazia");
+            System.out.println("Escolha uma regime:");
+            printMenu(menuRegime);
+
+            infoString = sc.nextLine();
+
+            if(infoString.equals("")) {
+                return null;
+            }
+
+            try {
+                opcao = Integer.parseInt(infoString);
+            } catch (NumberFormatException e) {
+                System.out.println("Opcao invalida");
+                continue;
+            }
+
+            try {
+                regime = menuRegime[opcao];
+            } catch(IndexOutOfBoundsException e) {
+                System.out.println("Opcao invalida");
+                continue;
+            }
+
+            //Passou todos os testes
+            break;
+        }
+
+        while (true) {
+            System.out.println("Para voltar ao menu principal envie uma resposta vazia");
+            System.out.println("Curso: ");
+
+            curso = escolhaListaCursosComDisciplina(disciplina);
+
+            if(curso == null) {
+                continue;
+            }
+
+            //Passou todos os testes
+            break;
+        }
+
+        while(true) {
+            System.out.println("Para voltar ao menu principal envie uma resposta vazia");
+            System.out.print("Ano: ");
+
+            infoString = sc.nextLine();
+
+            if(infoString.equals("")) {
+                return null;
+            }
+
+            try{
+                ano = Integer.parseInt(infoString);
+            } catch(NumberFormatException e) {
+                System.out.println("Insira um ano valido");
+                continue;
+            }
+
+            //Passou todos os testes
+            break;
+        }
+
+        out = new Aluno(nome, email, numMecanografico, curso, ano, regime);
+
+        if(out.getNome().equals("Nao existente")) {
+            return out;
+        }
+
+        if(!pessoas.contains(out)) {
+            pessoas.add(out);
+            disciplina.inscreverAluno(out);
+        } else {
+            System.out.println("Aluno já existe");
+            disciplina.inscreverAluno(out);
+        }
+
+        return out;
+    }
+
+    private static Aluno escolhaAlunoListaPessoas(Disciplina disciplina) {
+        Scanner sc = new Scanner(System.in);
+        int i = 0;
+        int opcao;
+        ArrayList<Aluno> alunos = getAlunosPessoas();
+
+        if(alunos == null) {
+            return null;
+        }
+
+        for(Aluno aluno : alunos) {
+            System.out.println(aluno.getNumAluno() +
+                    " " + aluno.getNome() +
+                    " ano: " + aluno.getAno() +
+                    " curso: " + aluno.getCurso().getNome() +
+                    " regime: " + aluno.getRegime());
+
+            ++i;
+        }
+
+        System.out.println("[" + i + "] Criar aluno");
+        System.out.print("Opcao: ");
+
+        try {
+            opcao = Integer.parseInt(sc.nextLine());
+        } catch (NumberFormatException e) {
+            System.out.println("Opcao invalida");
+            return null;
+        }
+
+        try {
+            return alunos.get(opcao);
+        } catch(ArrayIndexOutOfBoundsException e) {
+            //ultima opcao
+            if(opcao == alunos.size()) {
+                return criarAluno(disciplina);
+            }
+            System.out.println("Opcao invalida");
+            return null;
+        }
+    }
+
+
     public void guardarDados() {
 
     }
@@ -274,11 +941,11 @@ public class Gestor {
 
     }
 
-    public static void sair() {
+    private static void sair() {
         System.exit(0);
     }
 
-    public static void menu() {
+    private static int menu() {
         Scanner sc = new Scanner(System.in);
         Aluno auxAluno;
         Exame auxExame;
@@ -293,7 +960,7 @@ public class Gestor {
             auxInt = Integer.parseInt(sc.nextLine());
         } catch (NumberFormatException e) {
             System.out.printf("Opcao invalida");
-            return;
+            return 1;
         }
 
         switch (auxInt) {
@@ -308,7 +975,7 @@ public class Gestor {
                     auxInt = Integer.parseInt(sc.nextLine());
                 } catch (NumberFormatException e) {
                     System.out.printf("Opcao invalida");
-                    return;
+                    return 1;
                 }
 
                 switch (auxInt) {
@@ -395,21 +1062,86 @@ public class Gestor {
                         break;
                 }
                 break;
-            //Criar Exames
+            //Criar exames
             case 1:
+                break;
+            //Configurar exames
+            case 2:
+                System.out.println("--- Configurar exame ---");
+                if(examesDisponiveis()) {
+                    auxExame = escolhaListaExames();
+                    if(auxExame != null) {
+                        printMenu(menuConfigurarExame);
+                        System.out.println("[3] Menu principal");
+                        System.out.print("\nOpcao: ");
+
+                        try {
+                            auxInt = Integer.parseInt(sc.nextLine());
+                        } catch (NumberFormatException e) {
+                            System.out.printf("Opcao invalida");
+                            break;
+                        }
+
+                        switch (auxInt) {
+                            //Associar vigilante
+                            case 0:
+                                System.out.println("--- Associar vigilante ---");
+                                //TODO -> usar metodos das classes para imprimir informaçao
+                                //Escolher funcionario ou criar um
+                                auxFuncionario = escolhaVigilanteListaPessoas();
+                                if(auxFuncionario != null) {
+                                    //Se conseg
+                                    auxExame.inserirDocente((FuncionarioDocente)auxFuncionario);
+                                }
+                                break;
+                            //Associar assistente
+                            case 1:
+                                System.out.println("--- Associar assistente ---");
+                                auxFuncionario = escolhaAssistenteListaPessoas();
+                                if(auxFuncionario != null) {
+                                    auxExame.inserirAssistente((FuncionarioNaoDocente)auxFuncionario);
+                                }
+                                break;
+                            //Associar aluno
+                            case 2:
+                                System.out.println("--- Associar aluno ---");
+                                auxAluno = escolhaAlunoListaPessoas(auxExame.getDisciplina());
+                                if(auxAluno != null) {
+                                    if(auxAluno.getCurso().getNome().equals("Nao existente")) {
+                                        System.out.println("Nao existem cursos com a disciplina");
+                                    }
+                                    auxExame.inscreverAluno(auxAluno);
+                                }
+                                break;
+                            default:
+                                System.out.printf("Opcao invalida");
+                                break;
+                        }
+                    }
+                }
+                break;
+            //Lançar notas
+            case 3:
+                if(examesDisponiveis()) {
+                    auxExame = escolhaListaExames();
+                    if(auxExame != null) {
+                        auxExame.lancarNotas();
+                        System.out.println("Notas lançadas");
+                    }
+                }
                 break;
             //Sair
             case 4:
-                sair();
-                break;
+                return 0;
             //Opcao invalida
             default:
                 System.out.println("Opcao invalida");
                 break;
         }
+        return 1;
     }
 
-    public static void printMenu(String[] menu) {
+    private static void printMenu(String[] menu) {
         for(int i=0; i < menu.length; ++i) {
             System.out.println("[" + i + "] " + menu[i]);
         }

@@ -4,29 +4,26 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Random;
 
-/**
- * Created by the-unicorn on 10-11-2016.
- */
-
 public abstract class Exame {
     private Disciplina disciplina;
-    private IntervaloTempo data;
     private Sala sala;
+    private IntervaloTempo data;
     private FuncionarioDocente docenteResponsavel;
+
     private ArrayList<FuncionarioDocente> vigilantes;
     private ArrayList<FuncionarioNaoDocente> assistentes;
     private ArrayList<InscritoExame> resultados;
 
     //PUBLIC METHODS
+    //TODO -> usar metodo imprimirInformacaoExame
     public String imprimirInformacaoExame(){
         return "Disciplina: " + disciplina.getNome() + "\nData: " + data.getInicio().toString() + "\nSala: " + sala.getId();
     }
 
     //TEST
     public boolean verificarAlunoInscritoDisciplina(Aluno aluno, Disciplina disciplina) {
-        ArrayList<Aluno> alunosInscritos = disciplina.getAlunosInscritos();
-
-        if( alunosInscritos.contains(aluno) ) {
+        //Verificar se aluno esta inscrito
+        if(disciplina.getAlunosInscritos().contains(aluno) ) {
             return true;
         } else return false;
     }
@@ -77,8 +74,17 @@ public abstract class Exame {
     //TEST
     public void inscreverAluno(Aluno aluno) {
         InscritoExame inscrito = new InscritoExame(aluno);
+
+        if( !verificarAlunoInscritoDisciplina(aluno, this.disciplina)) {
+            System.out.println("O aluno nao esta inscrito a disciplina");
+            return;
+        }
+
         if( verificarAcessoExame(aluno) ) {
             resultados.add(inscrito);
+            System.out.println("Aluno inserido com sucesso");
+        } else {
+            System.out.println("Nao é permitido o aluno se inscrever neste tipo de exame");
         }
     }
 
@@ -96,7 +102,7 @@ public abstract class Exame {
     }
 
     //TEST
-    public void inserirFuncionario(FuncionarioNaoDocente funcionario) {
+    public void inserirAssistente(FuncionarioNaoDocente funcionario) {
         if( assistentes.contains(funcionario) ) {
             System.out.println("Funcionario ja pertence ao grupo de assistentes");
         } else {
@@ -104,7 +110,6 @@ public abstract class Exame {
         }
     }
 
-    //ABSTRACT METHODS
     abstract boolean verificarAcessoExame(Aluno aluno);
 
     //CONSTRUCTOR
@@ -121,10 +126,11 @@ public abstract class Exame {
         this.resultados = resultados;
     }
     //NORMAL CONSTRUCTOR
-    public Exame(Disciplina disciplina, Sala sala, FuncionarioDocente docenteResponsavel) {
+    public Exame(Disciplina disciplina, Sala sala, FuncionarioDocente docenteResponsavel, IntervaloTempo intervaloTempo) {
         this.disciplina = disciplina;
         this.sala = sala;
         this.docenteResponsavel = docenteResponsavel;
+        this.data = intervaloTempo;
     }
 
     //GETS
@@ -149,9 +155,7 @@ public abstract class Exame {
         return vigilantes;
     }
 
-    public String getEpoca() {
-        return "Especial";
-    }
+    abstract String getEpoca();
 
     //SETS
     public boolean setHoras(Calendar inicio, int duracao){

@@ -16,6 +16,14 @@ public class Disciplina {
         this.alunosInscritos = alunosInscritos;
     }
 
+    public boolean inscreverAluno(Aluno aluno) {
+        if(!alunosInscritos.contains(aluno)) {
+            alunosInscritos.add(aluno);
+            return true;
+        }
+        return false;
+    }
+
     //GETS
     public String getNome() {
         return nome;

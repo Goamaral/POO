@@ -3,7 +3,7 @@ package com.company;
 import java.util.ArrayList;
 
 public class Curso {
-    private String nome;
+    private String nome = "Nao existente";
     private int duracao;
     private String grauConfere;
     private ArrayList<Disciplina> disciplinas;
@@ -14,6 +14,13 @@ public class Curso {
         this.duracao = duracao;
         this.grauConfere = grauConfere;
         this.disciplinas = disciplinas;
+    }
+
+    public Curso() {
+    }
+
+    public String toString() {
+        return getNome() + " Duracao: " + getDuracao() + " Grau: " + getGrauConfere();
     }
 
     //GETS
