@@ -9,9 +9,9 @@ public abstract class Exame {
     private Sala sala;
     private IntervaloTempo data;
     private FuncionarioDocente docenteResponsavel;
-    private ArrayList<FuncionarioDocente> vigilantes;
-    private ArrayList<FuncionarioNaoDocente> assistentes;
-    private ArrayList<InscritoExame> resultados;
+    private ArrayList<FuncionarioDocente> vigilantes = new ArrayList<>();
+    private ArrayList<FuncionarioNaoDocente> assistentes = new ArrayList<>();
+    private ArrayList<InscritoExame> resultados = new ArrayList<>();
 
     //PUBLIC METHODS
     public abstract String toString();

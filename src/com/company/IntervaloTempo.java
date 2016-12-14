@@ -1,5 +1,6 @@
 package com.company;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 public class IntervaloTempo {
@@ -8,8 +9,13 @@ public class IntervaloTempo {
     private Calendar fim;
     private int duracao;
 
+    public String stringify(Calendar calendar) {
+        SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy HH:mm:ss");
+        return formatter.format(calendar.getTime());
+    }
+
     public String toString() {
-        return inicio.toString() + "|" + duracao;
+        return duracao + "|" + stringify(inicio);
     }
 
     //CONSTRUCTOR

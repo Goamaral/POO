@@ -2,9 +2,8 @@ package com.company;
 
 public class ExameEspecial extends Exame {
     public String toString(){
-        StringBuilder out = new StringBuilder(super.getDisciplina().toString() +
-                "|" + super.getData().getInicio().toString() +
-                "|" + super.getData().getDuracao() +
+        StringBuilder out = new StringBuilder(super.getDisciplina().getNome().toString() +
+                "|" + super.getData().toString() +
                 "|" + super.getSala().getId() +
                 "|" + getEpoca() + "\n");
 

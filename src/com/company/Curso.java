@@ -21,8 +21,16 @@ public class Curso {
 
     public String toString() {
         StringBuilder out = new StringBuilder(getNome() + "|" + getDuracao() + "|" + getGrauConfere() + "\n");
+        ArrayList<StringBuilder> cap;
+        String[] aux;
+
         for(Disciplina disciplina : disciplinas) {
-            out.append("\t" + disciplina.toString());
+            cap = disciplina.toStringBuilder();
+            out.append("\t" + cap.get(0).toString() + "\n");
+            aux = cap.get(1).toString().split("&&");
+            for(String string : aux) {
+                out.append("\t\t" + string + "\n");
+            }
         }
 
         return  out.toString();

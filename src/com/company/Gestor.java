@@ -1,16 +1,15 @@
 package com.company;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.*;
 
 import static java.lang.Character.isLetter;
 
 public class Gestor {
-    private static ArrayList<Exame> exames;
-    private static ArrayList<Pessoa> pessoas;
-    private static ArrayList<Curso> cursos;
-    private ArrayList<Sala> salas;
+    private static ArrayList<Exame> exames = new ArrayList<>();
+    private static ArrayList<Pessoa> pessoas = new ArrayList<>();
+    private static ArrayList<Curso> cursos = new ArrayList<>();
+    private ArrayList<Sala> salas = new ArrayList<>();
     private ArrayList<String> historico;
     private String importFileName;
     private String exportFileName;
@@ -19,8 +18,13 @@ public class Gestor {
     private static String[] menuConfigurarExame = {"Editar vigilantes", "Editar assistentes", "Editar aluno"};
 
     public static void main(String[] args) {
-        FuncionarioDocente resp = new FuncionarioDocente("Prof1", "email1@domain", 1, "assistente", "istemas de informação");
-        FuncionarioDocente doc = new FuncionarioDocente("Prof2", "email2@domain", 2, "assistente", "istemas de informação");
+        Calendar inicio = Calendar.getInstance();
+        inicio.set(2017, 1, 5, 10, 30, 45);
+        IntervaloTempo t1 = new IntervaloTempo(inicio, 30);
+        FuncionarioDocente resp = new FuncionarioDocente("Prof1", "email1@domain", 1, "assistente", "sistemas de informação");
+        FuncionarioDocente doc = new FuncionarioDocente("Prof2", "email2@domain", 2, "assistente", "sistemas de informação");
+        doc.preencherHorario(t1);
+        resp.preencherHorario(t1);
         ArrayList<FuncionarioDocente> docs = new ArrayList<>();
         docs.add(doc);
         Disciplina d1 = new Disciplina("POO", resp, docs);
@@ -29,9 +33,24 @@ public class Gestor {
         Curso c1 = new Curso("Engenharia Informatica", 3, "Licenciatura", ds1);
         Aluno a1 = new Aluno("Goa", "goa.docs@gmail.com", 26111997, c1, 2, "Normal");
         d1.inscreverAluno(a1);
+        FuncionarioNaoDocente f1 = new FuncionarioNaoDocente("Fun1", "email3@domain", 3, "assistente opereacional", "secretaria");
+
+        cursos.add(c1);
+        pessoas.add(resp);
+        pessoas.add(doc);
+        pessoas.add(a1);
+        pessoas.add(f1);
+
+        Sala s1 = new Sala("G5.1");
+        Sala s2 = new Sala("G5.2");
+        Exame e1 = new ExameNormalRecurso(d1, s1, resp, t1, "Normal");
+        Exame e2 = new ExameEspecial(d1, s2, resp, t1);
+
+        exames.add(e1);
+        exames.add(e2);
 
         try {
-            guardarDados(c1);
+            guardarDados();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -950,14 +969,27 @@ public class Gestor {
     }
 
 
-    private static void guardarDados(Curso c1) throws IOException {
-        FileWriter file =  new FileWriter("out.txt");
+    private static void guardarDados() throws IOException {
+        FileWriter cursosFile =  new FileWriter("cursos.txt");
+        for(Curso curso : cursos) {
+            cursosFile.write(curso.toString());
+            System.out.printf(curso.toString());
+        }
+        cursosFile.close();
 
-        file.write(c1.toString());
+        FileWriter pessoasFile =  new FileWriter("pessoas.txt");
+        for(Pessoa pessoa : pessoas) {
+            pessoasFile.write(pessoa.toString());
+            System.out.printf(pessoa.toString());
+        }
+        pessoasFile.close();
 
-        System.out.printf(c1.toString());
-
-        file.close();
+        FileWriter examesFile =  new FileWriter("exames.txt");
+        for(Exame exame : exames) {
+            examesFile.write(exame.toString());
+            System.out.printf(exame.toString());
+        }
+        examesFile.close();
 
         System.out.printf("Data saved at Database.db");
     }

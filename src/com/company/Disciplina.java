@@ -8,16 +8,23 @@ public class Disciplina {
     private ArrayList<FuncionarioDocente> outrosDocentes;
     private ArrayList<Aluno> alunosInscritos = new ArrayList<>();
 
-    public String toString() {
-        StringBuilder out = new StringBuilder(nome + "|" + responsavel.getNumMecanografico() + "\n");
+    public ArrayList<StringBuilder> toStringBuilder() {
+        StringBuilder base = new StringBuilder(nome + "|" + responsavel.getNumMecanografico());
+        StringBuilder base2 = new StringBuilder();
+        ArrayList<StringBuilder> out = new ArrayList<>();
+
         for(FuncionarioDocente funcionarioDocente : outrosDocentes) {
-            out.append("\t\t" + funcionarioDocente.getNome() + "|" + funcionarioDocente.getNumMecanografico() + "\n");
-        }
-        for(Aluno aluno : alunosInscritos) {
-            out.append("\t\t" + aluno.getNome() + "|" + aluno.getNumAluno() + "\n");
+            base2.append(funcionarioDocente.getNome() + "|" + funcionarioDocente.getNumMecanografico() + "&&");
         }
 
-        return out.toString();
+        for(Aluno aluno : alunosInscritos) {
+            base2.append(aluno.getNome() + "|" + aluno.getNumAluno() + "&&");
+        }
+
+        out.add(base);
+        out.add(base2);
+
+        return out;
     }
 
     //CONSTRUCTOR

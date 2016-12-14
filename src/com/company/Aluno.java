@@ -10,7 +10,7 @@ public class Aluno extends Pessoa {
     private String regime;
 
     public String toString() {
-        return numAluno + "|" + ano + "|" + regime;
+        return super.getNome() + "|" + numAluno + "|" + ano + "|" + regime + "\n";
     }
 
     //TEST

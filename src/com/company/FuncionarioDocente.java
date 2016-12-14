@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class FuncionarioDocente extends Funcionario {
     private String areaDeInvestigacao;
-    private ArrayList<IntervaloTempo> docenteOcupado;
+    private ArrayList<IntervaloTempo> docenteOcupado = new ArrayList<>();
 
     public String toString() {
         StringBuilder out = new StringBuilder(super.getNome() +
@@ -38,6 +38,11 @@ public class FuncionarioDocente extends Funcionario {
     public boolean preencherHorario(IntervaloTempo intervalo) {
         IntervaloTempo auxNext;
         int i=0;
+
+        if(docenteOcupado.size()==0) {
+            docenteOcupado.add(intervalo);
+            return true;
+        }
 
         for(IntervaloTempo aux : docenteOcupado) {
             //Inserir no inicio

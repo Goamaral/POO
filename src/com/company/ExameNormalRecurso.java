@@ -1,15 +1,11 @@
 package com.company;
 
-/**
- * Created by the-unicorn on 10-11-2016.
- */
 public class ExameNormalRecurso extends Exame {
     private String epoca;
 
     public String toString(){
-        StringBuilder out = new StringBuilder(super.getDisciplina().toString() +
-                "|" + super.getData().getInicio().toString() +
-                "|" + super.getData().getDuracao() +
+        StringBuilder out = new StringBuilder(super.getDisciplina().getNome().toString() +
+                "|" + super.getData().toString() +
                 "|" + super.getSala().getId() +
                 "|" + getEpoca() + "\n");
 
