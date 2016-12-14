@@ -2,15 +2,15 @@ package com.company;
 
 import java.util.Calendar;
 
-/**
- * Created by the-unicorn on 10-11-2016.
- */
-
 public class IntervaloTempo {
     
     private Calendar inicio;
     private Calendar fim;
     private int duracao;
+
+    public String toString() {
+        return inicio.toString() + "|" + duracao;
+    }
 
     //CONSTRUCTOR
     public IntervaloTempo(Calendar inicio, int duracao) {

@@ -6,6 +6,32 @@ public class FuncionarioDocente extends Funcionario {
     private String areaDeInvestigacao;
     private ArrayList<IntervaloTempo> docenteOcupado;
 
+    public String toString() {
+        StringBuilder out = new StringBuilder(super.getNome() +
+                "|" + super.getEmail() +
+                "|" + super.getNumMecanografico() +
+                "|" + super.getCategoria() +
+                "|" + areaDeInvestigacao + "\n");
+
+        for(IntervaloTempo intervaloTempo : docenteOcupado) {
+            out.append("\t" + intervaloTempo.toString() + "\n");
+        }
+
+        return out.toString();
+    }
+
+    public String toStringBasic() {
+        StringBuilder out = new StringBuilder("\t\t" + super.getNome() + "|"
+                + super.getNumMecanografico() +
+                "|" + areaDeInvestigacao+ "\n");
+
+        for(IntervaloTempo intervaloTempo : docenteOcupado) {
+            out.append("\t\t\t" + intervaloTempo.toString() + "\n");
+        }
+
+        return out.toString();
+    }
+
     //PRIVATE METHODS
     //PUBLIC METHODS
     //TEST

@@ -6,6 +6,28 @@ package com.company;
 public class ExameNormalRecurso extends Exame {
     private String epoca;
 
+    public String toString(){
+        StringBuilder out = new StringBuilder(super.getDisciplina().toString() +
+                "|" + super.getData().getInicio().toString() +
+                "|" + super.getData().getDuracao() +
+                "|" + super.getSala().getId() +
+                "|" + getEpoca() + "\n");
+
+        for(FuncionarioDocente funcionarioDocente : super.getVigilantes()) {
+            out.append("\t" + funcionarioDocente.toStringBasic());
+        }
+
+        for(FuncionarioNaoDocente funcionarioNaoDocente : super.getAssistentes()) {
+            out.append("\t" + funcionarioNaoDocente.toStringBasic());
+        }
+
+        for(InscritoExame inscritoExame : super.getResultados()) {
+            out.append("\t" + inscritoExame.toString());
+        }
+
+        return out.toString();
+    }
+
     public boolean verificarAcessoExame(Aluno aluno) {
         return true;
     }

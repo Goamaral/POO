@@ -1,10 +1,25 @@
 package com.company;
 
-/**
- * Created by the-unicorn on 10-11-2016.
- */
 public class FuncionarioNaoDocente extends Funcionario {
     private String cargo;
+
+    public String toString() {
+        StringBuilder out = new StringBuilder(super.getNome() +
+                "|" + super.getEmail() +
+                "|" + super.getNumMecanografico() +
+                "|" + super.getCategoria() +
+                "|" + cargo + "\n");
+
+        return out.toString();
+    }
+
+    public String toStringBasic() {
+        StringBuilder out = new StringBuilder("\t\t" + super.getNome() + "|"
+                + super.getNumMecanografico() +
+                "|" + cargo + "\n");
+
+        return out.toString();
+    }
 
     public String getCargo() {
         return cargo;

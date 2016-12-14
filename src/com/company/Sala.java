@@ -7,6 +7,16 @@ public class Sala {
     private ArrayList<IntervaloTempo> horasOcupadas;
     private String id;
 
+    public String toString() {
+        StringBuilder out = new StringBuilder(id);
+
+        for(IntervaloTempo intervaloTempo : horasOcupadas) {
+            out.append(intervaloTempo.toString());
+        }
+
+        return out.toString();
+    }
+
     public String getId() {
         return id;
     }

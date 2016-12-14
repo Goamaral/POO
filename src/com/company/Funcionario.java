@@ -2,11 +2,14 @@ package com.company;
 
 import java.util.ArrayList;
 
-public class Funcionario extends Pessoa {
+public abstract class Funcionario extends Pessoa {
     private int numMecanografico;
     private String categoria;
 
     //PUBLIC METHODS
+    public abstract String toStringBasic();
+    public abstract String toString();
+
     public void listarExames(ArrayList<Exame> exames) {
         for(Exame exame : exames){
             System.out.println("Disciplina: " + exame.getDisciplina().getNome() + "\nData: " + exame.getData().getInicio().toString() + "\nSala: " + exame.getSala().getId() + "\n");

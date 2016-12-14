@@ -1,11 +1,10 @@
 package com.company;
 
-/**
- * Created by the-unicorn on 10-11-2016.
- */
-public class Pessoa {
+public abstract class Pessoa {
     private String nome;
     private String email;
+
+    public abstract String toString();
 
     public Pessoa() {}
     public Pessoa(String nome, String email) {

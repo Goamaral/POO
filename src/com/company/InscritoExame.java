@@ -1,11 +1,12 @@
 package com.company;
 
-/**
- * Created by the-unicorn on 10-11-2016.
- */
 public class InscritoExame {
     private Aluno aluno;
     private String nota;
+
+    public String toString() {
+        return aluno.getNome() + "|" + aluno.getNumAluno() + "|" + nota;
+    }
 
     public Aluno getAluno() {
         return aluno;
