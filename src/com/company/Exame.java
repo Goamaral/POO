@@ -9,16 +9,12 @@ public abstract class Exame {
     private Sala sala;
     private IntervaloTempo data;
     private FuncionarioDocente docenteResponsavel;
-
     private ArrayList<FuncionarioDocente> vigilantes;
     private ArrayList<FuncionarioNaoDocente> assistentes;
     private ArrayList<InscritoExame> resultados;
 
     //PUBLIC METHODS
-    //TODO -> usar metodo imprimirInformacaoExame
-    public String imprimirInformacaoExame(){
-        return "Disciplina: " + disciplina.getNome() + "\nData: " + data.getInicio().toString() + "\nSala: " + sala.getId();
-    }
+    public abstract String toString();
 
     //TEST
     public boolean verificarAlunoInscritoDisciplina(Aluno aluno, Disciplina disciplina) {

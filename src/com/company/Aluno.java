@@ -2,15 +2,16 @@ package com.company;
 
 import java.util.ArrayList;
 
-/**
- * Created by the-unicorn on 10-11-2016.
- */
 
 public class Aluno extends Pessoa {
     private int numAluno;
     private Curso curso;
     private int ano;
     private String regime;
+
+    public String toString() {
+        return numAluno + "|" + ano + "|" + regime;
+    }
 
     //TEST
     public void listarClassificacoes(ArrayList<Exame> exames) {

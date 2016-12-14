@@ -1,13 +1,12 @@
 package com.company;
 
+import java.io.*;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Scanner;
 
 import static java.lang.Character.isLetter;
 
 public class Gestor {
-    //TODO -> protect inputs
     private static ArrayList<Exame> exames;
     private static ArrayList<Pessoa> pessoas;
     private static ArrayList<Curso> cursos;
@@ -20,6 +19,26 @@ public class Gestor {
     private static String[] menuConfigurarExame = {"Editar vigilantes", "Editar assistentes", "Editar aluno"};
 
     public static void main(String[] args) {
+        FuncionarioDocente resp = new FuncionarioDocente("Prof1", "email1@domain", 1, "assistente", "istemas de informação");
+        FuncionarioDocente doc = new FuncionarioDocente("Prof2", "email2@domain", 2, "assistente", "istemas de informação");
+        ArrayList<FuncionarioDocente> docs = new ArrayList<>();
+        docs.add(doc);
+        Disciplina d1 = new Disciplina("POO", resp, docs);
+        ArrayList<Disciplina> ds1 = new ArrayList<>();
+        ds1.add(d1);
+        Curso c1 = new Curso("Engenharia Informatica", 3, "Licenciatura", ds1);
+        Aluno a1 = new Aluno("Goa", "goa.docs@gmail.com", 26111997, c1, 2, "Normal");
+        d1.inscreverAluno(a1);
+
+        try {
+            guardarDados(c1);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        carregarDados();
+
+        sair();
         while(true) {
             if(menu() == 0) {
                 break;
@@ -713,7 +732,9 @@ public class Gestor {
         }
 
         for(Curso curso : cursos) {
-            System.out.println("[" + i + "] " + curso.toString());
+            System.out.println("[" + i + "] " + curso.getNome() +
+                    " Duracao: " + curso.getDuracao() +
+                    " Grau: " + curso.getGrauConfere());
             ++i;
         }
 
@@ -929,15 +950,23 @@ public class Gestor {
     }
 
 
-    public void guardarDados() {
+    private static void guardarDados(Curso c1) throws IOException {
+        FileWriter file =  new FileWriter("out.txt");
 
+        file.write(c1.toString());
+
+        System.out.printf(c1.toString());
+
+        file.close();
+
+        System.out.printf("Data saved at Database.db");
     }
 
     public void guardarHistorico() {
 
     }
 
-    public void carregarDados() {
+    private static void carregarDados() {
 
     }
 
@@ -1086,7 +1115,6 @@ public class Gestor {
                             //Associar vigilante
                             case 0:
                                 System.out.println("--- Associar vigilante ---");
-                                //TODO -> usar metodos das classes para imprimir informaçao
                                 //Escolher funcionario ou criar um
                                 auxFuncionario = escolhaVigilanteListaPessoas();
                                 if(auxFuncionario != null) {

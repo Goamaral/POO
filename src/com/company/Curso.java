@@ -20,7 +20,12 @@ public class Curso {
     }
 
     public String toString() {
-        return getNome() + " Duracao: " + getDuracao() + " Grau: " + getGrauConfere();
+        StringBuilder out = new StringBuilder(getNome() + "|" + getDuracao() + "|" + getGrauConfere() + "\n");
+        for(Disciplina disciplina : disciplinas) {
+            out.append("\t" + disciplina.toString());
+        }
+
+        return  out.toString();
     }
 
     //GETS

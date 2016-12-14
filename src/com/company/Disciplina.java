@@ -6,14 +6,25 @@ public class Disciplina {
     private String nome;
     private FuncionarioDocente responsavel;
     private ArrayList<FuncionarioDocente> outrosDocentes;
-    private ArrayList<Aluno> alunosInscritos;
+    private ArrayList<Aluno> alunosInscritos = new ArrayList<>();
+
+    public String toString() {
+        StringBuilder out = new StringBuilder(nome + "|" + responsavel.getNumMecanografico() + "\n");
+        for(FuncionarioDocente funcionarioDocente : outrosDocentes) {
+            out.append("\t\t" + funcionarioDocente.getNome() + "|" + funcionarioDocente.getNumMecanografico() + "\n");
+        }
+        for(Aluno aluno : alunosInscritos) {
+            out.append("\t\t" + aluno.getNome() + "|" + aluno.getNumAluno() + "\n");
+        }
+
+        return out.toString();
+    }
 
     //CONSTRUCTOR
-    public Disciplina(String nome, FuncionarioDocente responsavel, ArrayList<FuncionarioDocente> outrosDocentes, ArrayList<Aluno> alunosInscritos) {
+    public Disciplina(String nome, FuncionarioDocente responsavel, ArrayList<FuncionarioDocente> outrosDocentes) {
         this.nome = nome;
         this.responsavel = responsavel;
         this.outrosDocentes = outrosDocentes;
-        this.alunosInscritos = alunosInscritos;
     }
 
     public boolean inscreverAluno(Aluno aluno) {
