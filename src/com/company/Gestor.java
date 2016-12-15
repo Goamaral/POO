@@ -1,6 +1,7 @@
 package com.company;
 
 import java.io.*;
+import java.lang.reflect.Array;
 import java.util.*;
 
 import static java.lang.Character.isLetter;
@@ -11,7 +12,6 @@ public class Gestor {
     private static ArrayList<Exame> exames = new ArrayList<>();
     private static ArrayList<Pessoa> pessoas = new ArrayList<>();
     private static ArrayList<Curso> cursos = new ArrayList<>();
-    private static ArrayList<Sala> salas = new ArrayList<>();
     private ArrayList<String> historico = new ArrayList<>();
     private String importFileName;
     private String exportFileName;
@@ -22,7 +22,7 @@ public class Gestor {
     public static void main(String[] args) {
         FuncionarioDocente resp = new FuncionarioDocente("Responsavel", "responsavel@domain", 1, "assistente", "sistemas de informação");
         pessoas.add(resp);
-        FuncionarioDocente vig = new FuncionarioDocente("Vigilante", "vigilante@domain", 2, "auxiliar,", "comunicação e telemática");
+        FuncionarioDocente vig = new FuncionarioDocente("Vigilante", "vigilante@domain", 2, "auxiliar", "comunicação e telemática");
         pessoas.add(vig);
         ArrayList<FuncionarioDocente> outrosDocentes = new ArrayList<>();
         outrosDocentes.add(vig);
@@ -35,13 +35,12 @@ public class Gestor {
         disciplinas.add(d2);
 
         Sala s1 = new Sala("Sala1");
-        salas.add(s1);
         Calendar date1 = Calendar.getInstance();
-        date1.set(2017, 1, 5, 10, 30);
+        date1.set(2017, 0, 5, 10, 30);
         Calendar date2 = Calendar.getInstance();
-        date2.set(2017, 1, 20, 14, 0);
+        date2.set(2017, 0, 20, 14, 0);
         Calendar date3 = Calendar.getInstance();
-        date3.set(2017, 2, 5, 17, 30);
+        date3.set(2017, 1, 5, 17, 30);
         IntervaloTempo t1 = new IntervaloTempo(date1, 30);
         IntervaloTempo t2 = new IntervaloTempo(date2, 60);
         IntervaloTempo t3 = new IntervaloTempo(date3, 60);
@@ -62,11 +61,11 @@ public class Gestor {
         Aluno a1 = new Aluno("Aluno 1", "aluno1@domain", 1000, c1, 1, "normal");
         pessoas.add(a1);
 
-        /*try {
+        try {
             carregarDados();
         } catch (IOException e) {
             e.printStackTrace();
-        }*/
+        }
 
         while(true) {
             if(menu() == 0) {
@@ -978,77 +977,244 @@ public class Gestor {
         FileWriter cursosFile =  new FileWriter("cursos.txt");
         for(Curso curso : cursos) {
             cursosFile.write(curso.toString());
-            System.out.printf(curso.toString());
         }
+
+        cursosFile.write("END");
         cursosFile.close();
 
         FileWriter pessoasFile =  new FileWriter("pessoas.txt");
         for(Pessoa pessoa : pessoas) {
             pessoasFile.write(pessoa.toString());
-            System.out.printf(pessoa.toString());
         }
+
+        pessoasFile.write("END");
         pessoasFile.close();
 
         FileWriter examesFile =  new FileWriter("exames.txt");
         for(Exame exame : exames) {
             examesFile.write(exame.toString());
-            System.out.printf(exame.toString());
         }
+
+        examesFile.write("END");
         examesFile.close();
 
-        System.out.printf("Data saved at Database.db");
+        System.out.printf("Data saved");
     }
 
     public void guardarHistorico() {
 
     }
 
-    /*
-    private static void carregarDados() throws IOException {
-        FileReader cursosFile = new FileReader("cursos.txt");
-        BufferedReader cursosBuffer = new BufferedReader(cursosFile);
+    private static void carregarPessoas() throws IOException {
+        FileReader fileReader = new FileReader("pessoas.txt");
+        BufferedReader bufferedReader = new BufferedReader(fileReader);
         String line;
-        Curso curso = null;
-        String nomeCurso = "Erro";
-        int duracaoCurso = -1;
-        String grauConfereCurso = "Erro";
-        ArrayList<Disciplina> disciplinas = new ArrayList<>();
-        String nomeDisciplina = "Erro";
-        int numResponsavel;
-        FuncionarioDocente responsavelDisciplina;
         String[] catcher;
-        int a = 0;
-        ArrayList<FuncionarioDocente> outrosDocentes;
 
-        while ((line = cursosBuffer.readLine()) != null) {
-            if(line.charAt(0) != '\t') {
-                if(a>0) {
-                    //TODO -> Continue
-                    disciplinas.add( new Disciplina(nomeDisciplina, responsavelDisciplina, outrosDocentes).inscreverAluno(new Aluno()) );
-                    cursos.add( new Curso(nomeCurso, duracaoCurso, grauConfereCurso, disciplinas) );
-                    disciplinas = new ArrayList<>();
-                }
-                catcher = line.split("|");
-                nomeCurso = catcher[0];
-                duracaoCurso = Integer.parseInt(catcher[1]);
-                grauConfereCurso = catcher[2];
-                ++a;
-            } else if(line.charAt(0) == '\t' && line.charAt(1) != '\t') {
-                catcher = line.split("|");
-                nomeDisciplina = catcher[0];
-                numResponsavel = Integer.parseInt(catcher[1]);
-                //TODO -> obter resposavel com o numero
-            } else if(line.charAt(0) == '\t' && line.charAt(1) == '\t') {
-                catcher = line.split("|");
+        FuncionarioDocente funcionarioDocente;
+        FuncionarioNaoDocente funcionarioNaoDocente;
+        Aluno aluno;
 
+        while((line = bufferedReader.readLine()) != null) {
+            catcher = line.split("»");
+
+            //Docente
+            if(catcher[catcher.length -1].equals("D")) {
+                funcionarioDocente = new FuncionarioDocente(catcher[0], catcher[1], Integer.parseInt(catcher[2]), catcher[3], catcher[4]);
+                pessoas.add(funcionarioDocente);
             }
 
-            System.out.println(line);
+            if(catcher[catcher.length -1].equals("N")) {
+                funcionarioNaoDocente = new FuncionarioNaoDocente(catcher[0], catcher[1], Integer.parseInt(catcher[2]), catcher[3], catcher[4]);
+                pessoas.add(funcionarioNaoDocente);
+            }
+
+            if(catcher[catcher.length -1].equals("A")) {
+                aluno = new Aluno(catcher[0], catcher[1], Integer.parseInt(catcher[2]), null, Integer.parseInt(catcher[3]), catcher[4]);
+                pessoas.add(aluno);
+            }
+
         }
 
-        cursosFile.close();
+        fileReader.close();
     }
-    */
+
+    private static void carregarCursos() throws IOException {
+        FileReader fileReader = new FileReader("cursos.txt");
+        BufferedReader bufferedReader = new BufferedReader(fileReader);
+        String line;
+        String[] catcher;
+        boolean aLerCurso = false;
+        boolean aLerDisciplina = false;
+
+        ArrayList<Disciplina> disciplinas = new ArrayList<>();
+        String nomeCurso;
+        int duracaoCurso;
+        String grauConfereCurso;
+        Curso curso;
+
+        ArrayList<FuncionarioDocente> outrosDocentes = new ArrayList<>();
+        ArrayList<Aluno> alunos = new ArrayList<>();
+        String nomeDisciplina = null;
+        FuncionarioDocente responsavelDisciplina = null;
+        Disciplina disciplina;
+
+        Aluno aluno;
+        FuncionarioDocente funcionarioDocente;
+
+        while((line = bufferedReader.readLine()) != null) {
+            if(line.charAt(0) == '\t' && line.charAt(1) == '\t') {
+                catcher = line.split("»");
+
+                aluno = null;
+                funcionarioDocente = null;
+
+                //Procurar pessoa com numero
+                for(Pessoa pessoa : pessoas) {
+                    if(pessoa instanceof FuncionarioDocente) {
+                        if(((FuncionarioDocente) pessoa).getNumMecanografico() == Integer.parseInt(catcher[1])) {
+                            funcionarioDocente = (FuncionarioDocente) pessoa;
+                            break;
+                        }
+                    }  else if(pessoa instanceof Aluno) {
+                        if(((Aluno) pessoa).getNumAluno() == Integer.parseInt(catcher[1])) {
+                            aluno = (Aluno) pessoa;
+                            break;
+                        }
+                    }
+                }
+
+                if(aluno != null) {
+                    alunos.add(aluno);
+                } else if(funcionarioDocente != null) {
+                    outrosDocentes.add(funcionarioDocente);
+                }
+
+            } else if(line.charAt(0) == '\t') {
+                catcher = line.split("»");
+
+                catcher[0] = catcher[0].replaceAll("\t", "");
+
+                nomeDisciplina = catcher[0];
+
+                for(Pessoa pessoa : pessoas) {
+                    if(pessoa instanceof FuncionarioDocente) {
+                        if(((FuncionarioDocente) pessoa).getNumMecanografico() == Integer.parseInt(catcher[1])) {
+                            responsavelDisciplina = (FuncionarioDocente) pessoa;
+                            break;
+                        }
+                    }
+                }
+
+                if(aLerDisciplina) {
+                    disciplina = new Disciplina(nomeDisciplina, responsavelDisciplina, outrosDocentes);
+
+                    for(Aluno auxAluno : alunos) {
+                        disciplina.inscreverAluno(auxAluno);
+                    }
+
+                    disciplinas.add(disciplina);
+                    outrosDocentes = new ArrayList<>();
+                    alunos = new ArrayList<>();
+                } else {
+                    aLerDisciplina = true;
+                }
+            } else {
+                catcher = line.split("»");
+                nomeCurso = catcher[0];
+                if(nomeCurso.equals("END")) {
+                    break;
+                }
+                duracaoCurso = Integer.parseInt(catcher[1]);
+                grauConfereCurso = catcher[2];
+                if(aLerCurso) {
+                    curso = new Curso(nomeCurso, duracaoCurso, grauConfereCurso, disciplinas);
+                    cursos.add(curso);
+                    disciplinas = new ArrayList<>();
+                } else {
+                    aLerCurso = true;
+                }
+            }
+        }
+
+        for(Curso auxCurso : cursos) {
+            for(Disciplina auxDisciplina : auxCurso.getDisciplinas()) {
+                for(Aluno auxAluno : auxDisciplina.getAlunosInscritos()) {
+                    auxAluno.setCurso(auxCurso);
+                }
+            }
+        }
+
+        fileReader.close();
+    }
+
+    private static void carregarExames() throws IOException {
+        FileReader fileReader = new FileReader("exames.txt");
+        BufferedReader bufferedReader = new BufferedReader(fileReader);
+        String line;
+        String[] catcher;
+        String[] secondLevelCatcher;
+        String[] thirdLevelCatcher;
+        String[] meses = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+
+        String disciplinaNome;
+        String salaNome;
+        String epoca;
+        int duracao;
+        int dia;
+        int mes;
+        int ano;
+        int hora;
+        int minuto;
+
+        Calendar calendar = Calendar.getInstance();
+
+        Exame exame;
+
+        while((line = bufferedReader.readLine()) != null) {
+            catcher = line.split("»");
+
+            disciplinaNome = catcher[0];
+
+            secondLevelCatcher = catcher[1].split(" ");
+
+            duracao = Integer.parseInt(secondLevelCatcher[0]);
+
+            //Calendar
+            dia = Integer.parseInt(secondLevelCatcher[1]);
+            mes = Arrays.asList(meses).indexOf(secondLevelCatcher[2]);
+            ano = Integer.parseInt(secondLevelCatcher[3]);
+
+            thirdLevelCatcher = secondLevelCatcher[4].split(":");
+
+            hora = Integer.parseInt(thirdLevelCatcher[0]);
+            minuto = Integer.parseInt(thirdLevelCatcher[1]);
+
+            calendar.set(ano, mes, dia, hora, minuto);
+            //End of Calendar
+
+            salaNome = catcher[2];
+
+            epoca = catcher[3];
+
+            //TODO
+            if(epoca.equals("Normal")) {
+
+            } else if(epoca.equals("Recurso")) {
+
+            } else if(epoca.equals("Especial")) {
+
+            }
+        }
+
+        fileReader.close();
+    }
+
+    private static void carregarDados() throws IOException {
+        carregarPessoas();
+        carregarCursos();
+
+    }
 
     private static void sair() {
         System.exit(0);

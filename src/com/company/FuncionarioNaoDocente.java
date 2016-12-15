@@ -16,18 +16,19 @@ public class FuncionarioNaoDocente extends Funcionario {
 
     public String toString() {
         StringBuilder out = new StringBuilder(super.getNome() +
-                "|" + super.getEmail() +
-                "|" + super.getNumMecanografico() +
-                "|" + super.getCategoria() +
-                "|" + cargo + "\n");
+                "»" + super.getEmail() +
+                "»" + super.getNumMecanografico() +
+                "»" + super.getCategoria() +
+                "»" + cargo +
+                "»" + "N" + "\n");
 
         return out.toString();
     }
 
     public String toStringBasic() {
-        StringBuilder out = new StringBuilder("\t\t" + super.getNome() + "|"
+        StringBuilder out = new StringBuilder("\t\t" + super.getNome() + "»"
                 + super.getNumMecanografico() +
-                "|" + cargo + "\n");
+                "»" + cargo + "\n");
 
         return out.toString();
     }

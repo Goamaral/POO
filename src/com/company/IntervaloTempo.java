@@ -10,12 +10,12 @@ public class IntervaloTempo {
     private int duracao;
 
     public String stringify(Calendar calendar) {
-        SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy HH:mm:ss");
+        SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy HH:mm");
         return formatter.format(calendar.getTime());
     }
 
     public String toString() {
-        return duracao + "|" + stringify(inicio);
+        return duracao + " " + stringify(inicio);
     }
 
     //CONSTRUCTOR

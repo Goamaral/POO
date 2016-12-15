@@ -5,9 +5,9 @@ public class ExameNormalRecurso extends Exame {
 
     public String toString(){
         StringBuilder out = new StringBuilder(super.getDisciplina().getNome().toString() +
-                "|" + super.getData().toString() +
-                "|" + super.getSala().getId() +
-                "|" + getEpoca() + "\n");
+                "»" + super.getData().toString() +
+                "»" + super.getSala().getId() +
+                "»" + getEpoca() + "\n");
 
         for(FuncionarioDocente funcionarioDocente : super.getVigilantes()) {
             out.append("\t" + funcionarioDocente.toStringBasic());

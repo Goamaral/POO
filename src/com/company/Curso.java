@@ -24,7 +24,7 @@ public class Curso {
     }
 
     public String toString() {
-        StringBuilder out = new StringBuilder(getNome() + "|" + getDuracao() + "|" + getGrauConfere() + "\n");
+        StringBuilder out = new StringBuilder(getNome() + "»" + getDuracao() + "»" + getGrauConfere() + "\n");
         ArrayList<StringBuilder> cap;
         String[] aux;
 

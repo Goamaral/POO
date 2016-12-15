@@ -8,10 +8,10 @@ public class Sala {
     private String id;
 
     public String toString() {
-        StringBuilder out = new StringBuilder(id);
+        StringBuilder out = new StringBuilder(id + "\n");
 
         for (IntervaloTempo intervaloTempo : horasOcupadas) {
-            out.append(intervaloTempo.toString());
+            out.append("\t" + intervaloTempo.toString());
         }
 
         return out.toString();

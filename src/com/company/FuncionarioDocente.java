@@ -16,10 +16,11 @@ public class FuncionarioDocente extends Funcionario {
 
     public String toString() {
         StringBuilder out = new StringBuilder(super.getNome() +
-                "|" + super.getEmail() +
-                "|" + super.getNumMecanografico() +
-                "|" + super.getCategoria() +
-                "|" + this.getAreaDeInvestigacao() + "\n");
+                "»" + super.getEmail() +
+                "»" + super.getNumMecanografico() +
+                "»" + super.getCategoria() +
+                "»" + this.getAreaDeInvestigacao() +
+                "»" + "D" + "\n");
 
         for(IntervaloTempo intervaloTempo : this.getDocenteOcupado()) {
             out.append("\t" + intervaloTempo.toString() + "\n");
@@ -29,9 +30,9 @@ public class FuncionarioDocente extends Funcionario {
     }
 
     public String toStringBasic() {
-        StringBuilder out = new StringBuilder("\t\t" + super.getNome() + "|"
+        StringBuilder out = new StringBuilder("\t\t" + super.getNome() + "»"
                 + super.getNumMecanografico() +
-                "|" + this.getAreaDeInvestigacao()+ "\n");
+                "»" + this.getAreaDeInvestigacao()+ "\n");
 
         for(IntervaloTempo intervaloTempo : this.getDocenteOcupado()) {
             out.append("\t\t\t" + intervaloTempo.toString() + "\n");

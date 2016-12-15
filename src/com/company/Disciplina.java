@@ -9,16 +9,16 @@ public class Disciplina {
     private ArrayList<Aluno> alunosInscritos = new ArrayList<>();
 
     public ArrayList<StringBuilder> toStringBuilder() {
-        StringBuilder base = new StringBuilder(this.getNome() + "|" + this.getResponsavel().getNumMecanografico());
+        StringBuilder base = new StringBuilder(this.getNome() + "»" + this.getResponsavel().getNumMecanografico());
         StringBuilder base2 = new StringBuilder();
         ArrayList<StringBuilder> out = new ArrayList<>();
 
         for(FuncionarioDocente funcionarioDocente : this.getOutrosDocentes()) {
-            base2.append(funcionarioDocente.getNome() + "|" + funcionarioDocente.getNumMecanografico() + "&&");
+            base2.append(funcionarioDocente.getNome() + "»" + funcionarioDocente.getNumMecanografico() + "&&");
         }
 
         for(Aluno aluno : this.getAlunosInscritos()) {
-            base2.append(aluno.getNome() + "|" + aluno.getNumAluno() + "&&");
+            base2.append(aluno.getNome() + "»" + aluno.getNumAluno() + "&&");
         }
 
         out.add(base);
