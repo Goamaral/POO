@@ -1,4 +1,5 @@
-Engenharia Informatica|3|Licenciatura
-	POO|1
-		Prof2|2
-		Goa|26111997
+Curso 1|3|Licenciatura
+	Disciplina 1|1
+		Vigilante|2
+	Disciplina 2|1
+		Vigilante|2

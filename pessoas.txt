@@ -1,0 +1,6 @@
+Responsavel|responsavel@domain|1|assistente|sistemas de informação
+Vigilante|vigilante@domain|2|auxiliar,|comunicação e telemática
+Assistente|assistente@domain|3|assistente operacional|secretaria
+Aluno 1|1000|1|normal
+prof|prof1@domain|1234|Assistente|Assistente
+	30|05 Feb 2017 10:30:46

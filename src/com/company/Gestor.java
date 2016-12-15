@@ -5,11 +5,13 @@ import java.util.*;
 
 import static java.lang.Character.isLetter;
 
+//TODO -> guardar salas
+
 public class Gestor {
     private static ArrayList<Exame> exames = new ArrayList<>();
     private static ArrayList<Pessoa> pessoas = new ArrayList<>();
     private static ArrayList<Curso> cursos = new ArrayList<>();
-    private ArrayList<Sala> salas = new ArrayList<>();
+    private static ArrayList<Sala> salas = new ArrayList<>();
     private ArrayList<String> historico = new ArrayList<>();
     private String importFileName;
     private String exportFileName;
@@ -18,6 +20,47 @@ public class Gestor {
     private static String[] menuConfigurarExame = {"Editar vigilantes", "Editar assistentes", "Editar aluno"};
 
     public static void main(String[] args) {
+        FuncionarioDocente resp = new FuncionarioDocente("Responsavel", "responsavel@domain", 1, "assistente", "sistemas de informação");
+        pessoas.add(resp);
+        FuncionarioDocente vig = new FuncionarioDocente("Vigilante", "vigilante@domain", 2, "auxiliar,", "comunicação e telemática");
+        pessoas.add(vig);
+        ArrayList<FuncionarioDocente> outrosDocentes = new ArrayList<>();
+        outrosDocentes.add(vig);
+
+        Disciplina d1 = new Disciplina("Disciplina 1", resp, outrosDocentes);
+        Disciplina d2 = new Disciplina("Disciplina 2", resp, outrosDocentes);
+
+        ArrayList<Disciplina> disciplinas = new ArrayList<>();
+        disciplinas.add(d1);
+        disciplinas.add(d2);
+
+        Sala s1 = new Sala("Sala1");
+        salas.add(s1);
+        Calendar date1 = Calendar.getInstance();
+        date1.set(2017, 1, 5, 10, 30);
+        Calendar date2 = Calendar.getInstance();
+        date2.set(2017, 1, 20, 14, 0);
+        Calendar date3 = Calendar.getInstance();
+        date3.set(2017, 2, 5, 17, 30);
+        IntervaloTempo t1 = new IntervaloTempo(date1, 30);
+        IntervaloTempo t2 = new IntervaloTempo(date2, 60);
+        IntervaloTempo t3 = new IntervaloTempo(date3, 60);
+
+        Exame en = new ExameNormalRecurso(d1, s1, resp, t1, "Normal");
+        exames.add(en);
+        Exame er = new ExameNormalRecurso(d1, s1, resp, t2, "Recurso");
+        exames.add(er);
+        Exame ee = new ExameEspecial(d1, s1, resp, t3);
+        exames.add(ee);
+
+        FuncionarioNaoDocente ass = new FuncionarioNaoDocente("Assistente", "assistente@domain", 3, "assistente operacional", "secretaria");
+        pessoas.add(ass);
+
+        Curso c1 = new Curso("Curso 1", 3, "Licenciatura", disciplinas);
+        cursos.add(c1);
+
+        Aluno a1 = new Aluno("Aluno 1", "aluno1@domain", 1000, c1, 1, "normal");
+        pessoas.add(a1);
 
         /*try {
             carregarDados();
@@ -44,10 +87,10 @@ public class Gestor {
     private static void listarExames() {
         //Imprimir exames
         for (Exame exame : exames) {
-            System.out.printf("%s, %s, %s, %s, %s, %s, %s",
-                    exame.getEpoca(), exame.getDisciplina().getNome(), exame.getData().getInicio(), exame.getData().getDuracao(),
-                    exame.getSala().getId(), exame.getVigilantes().size(), exame.getResultados().size());
+            System.out.println(exame.toStringDetailed());
         }
+
+        System.out.println("");
     }
 
     //Criar menu de escolha com a lista de todos os exames e devolver o exame escolhido
@@ -58,13 +101,11 @@ public class Gestor {
 
         //Imprimir exames
         for (Exame exame : exames) {
-            System.out.printf("[%d] %s, %s, %s, %s, %s, %s, %s",
-                    i, exame.getEpoca(), exame.getDisciplina().getNome(), exame.getData().getInicio(), exame.getData().getDuracao(),
-                    exame.getSala().getId(), exame.getVigilantes().size(), exame.getResultados().size());
+            System.out.printf("[%d] %s\n", i, exame.toStringDetailed());
             ++i;
         }
 
-        System.out.print("Opcao: ");
+        System.out.print("\nOpcao: ");
         try {
             opcaoInteger = Integer.parseInt(scanner.nextLine());
         } catch (NumberFormatException e) {
@@ -400,7 +441,7 @@ public class Gestor {
 
         try {
             return funcionarioDocentes.get(opcao);
-        } catch(ArrayIndexOutOfBoundsException e) {
+        } catch(IndexOutOfBoundsException e) {
             //ultima opcao
             if(opcao == funcionarioDocentes.size()) {
                 return criarDocente();
@@ -654,7 +695,7 @@ public class Gestor {
         Scanner scanner = new Scanner(System.in);
         ArrayList<Curso> cursos = getCursosComDisciplina(disciplina);
 
-        if(cursos == null) {
+        if(cursos.size() == 0) {
             return new Curso();
         }
 
@@ -756,7 +797,7 @@ public class Gestor {
 
         while (true) {
             System.out.println("Para voltar ao menu principal envie uma resposta vazia");
-            System.out.println("Escolha uma regime:");
+            System.out.println(" uma regime:");
             printMenu(menuRegime);
 
             infoString = sc.nextLine();
@@ -969,7 +1010,7 @@ public class Gestor {
         try {
             auxInt = Integer.parseInt(sc.nextLine());
         } catch (NumberFormatException e) {
-            System.out.printf("Opcao invalida");
+            System.out.println("Opcao invalida");
             return 1;
         }
 
@@ -991,15 +1032,19 @@ public class Gestor {
                 switch (auxInt) {
                     //Listar exames
                     case 0:
-                        System.out.println("\n--- Listar Exames ---");
+                        System.out.println("\n--- Listar Exames ---\n");
                         if(examesDisponiveis()){
                             listarExames();
                         }
+
+                        System.out.println("Para continuar prima qualquer tecla");
+                        sc.nextLine();
+
                         break;
                         
                     //Listar alunos inscritos num exame
                     case 1:
-                        System.out.println("\n--- Listar alunos inscritos num exame ---");
+                        System.out.println("\n--- Listar alunos inscritos num exame ---\n");
 
                         if(examesDisponiveis()) {
                             auxExame = escolhaListaExames();
@@ -1009,11 +1054,14 @@ public class Gestor {
                             }
                         }
 
+                        System.out.println("Para continuar prima qualquer tecla");
+                        sc.nextLine();
+
                         break;
                         
                     //Listar exames de um aluno
                     case 2:
-                        System.out.println("\n--- Listar exames de um aluno ---");
+                        System.out.println("\n--- Listar exames de um aluno ---\n");
 
                         if(examesDisponiveis()) {
                             auxAluno = escolhaListaAlunosInscritosExame();
@@ -1022,6 +1070,9 @@ public class Gestor {
                                 auxAluno.listarExames(exames);
                             }
                         }
+
+                        System.out.println("Para continuar prima qualquer tecla");
+                        sc.nextLine();
 
                         break;
 
@@ -1037,10 +1088,13 @@ public class Gestor {
                             }
                         }
 
+                        System.out.println("Para continuar prima qualquer tecla");
+                        sc.nextLine();
+
                         break;
                     
                     case 4:
-                        System.out.println("---Listar exames de um funcionario---");
+                        System.out.println("---Listar exames de um funcionario---\n");
 
                         if(examesDisponiveis()) {
                             auxFuncionario = escolhaListaFuncionarios();
@@ -1049,6 +1103,9 @@ public class Gestor {
                                 auxFuncionario.listarExames(exames);
                             }
                         }
+
+                        System.out.println("\nPara continuar prima qualquer tecla");
+                        sc.nextLine();
 
                         break;
                         
@@ -1061,6 +1118,9 @@ public class Gestor {
                                 auxExame.listarNotas();
                             }
                         }
+
+                        System.out.println("Para continuar prima qualquer tecla");
+                        sc.nextLine();
 
                         break;
 
@@ -1102,6 +1162,10 @@ public class Gestor {
                                     //Se conseg
                                     auxExame.inserirDocente((FuncionarioDocente)auxFuncionario);
                                 }
+
+                                System.out.println("Para continuar prima qualquer tecla");
+                                sc.nextLine();
+
                                 break;
                             //Associar assistente
                             case 1:
@@ -1110,6 +1174,10 @@ public class Gestor {
                                 if(auxFuncionario != null) {
                                     auxExame.inserirAssistente((FuncionarioNaoDocente)auxFuncionario);
                                 }
+
+                                System.out.println("Para continuar prima qualquer tecla");
+                                sc.nextLine();
+
                                 break;
                             //Associar aluno
                             case 2:
@@ -1121,6 +1189,10 @@ public class Gestor {
                                     }
                                     auxExame.inscreverAluno(auxAluno);
                                 }
+
+                                System.out.println("Para continuar prima qualquer tecla");
+                                sc.nextLine();
+
                                 break;
                             default:
                                 System.out.printf("Opcao invalida");
@@ -1138,6 +1210,10 @@ public class Gestor {
                         System.out.println("Notas lançadas");
                     }
                 }
+
+                System.out.println("Para continuar prima qualquer tecla");
+                sc.nextLine();
+
                 break;
             //Sair
             case 4:

@@ -19,9 +19,9 @@ public class FuncionarioDocente extends Funcionario {
                 "|" + super.getEmail() +
                 "|" + super.getNumMecanografico() +
                 "|" + super.getCategoria() +
-                "|" + areaDeInvestigacao + "\n");
+                "|" + this.getAreaDeInvestigacao() + "\n");
 
-        for(IntervaloTempo intervaloTempo : docenteOcupado) {
+        for(IntervaloTempo intervaloTempo : this.getDocenteOcupado()) {
             out.append("\t" + intervaloTempo.toString() + "\n");
         }
 
@@ -31,9 +31,9 @@ public class FuncionarioDocente extends Funcionario {
     public String toStringBasic() {
         StringBuilder out = new StringBuilder("\t\t" + super.getNome() + "|"
                 + super.getNumMecanografico() +
-                "|" + areaDeInvestigacao+ "\n");
+                "|" + this.getAreaDeInvestigacao()+ "\n");
 
-        for(IntervaloTempo intervaloTempo : docenteOcupado) {
+        for(IntervaloTempo intervaloTempo : this.getDocenteOcupado()) {
             out.append("\t\t\t" + intervaloTempo.toString() + "\n");
         }
 
@@ -42,23 +42,22 @@ public class FuncionarioDocente extends Funcionario {
 
     //PRIVATE METHODS
     //PUBLIC METHODS
-    //TEST
     public boolean preencherHorario(IntervaloTempo intervalo) {
         IntervaloTempo auxNext;
         int i=0;
 
-        if(docenteOcupado.size()==0) {
-            docenteOcupado.add(intervalo);
+        if(this.getDocenteOcupado().size()==0) {
+            this.getDocenteOcupado().add(intervalo);
             return true;
         }
 
-        for(IntervaloTempo aux : docenteOcupado) {
+        for(IntervaloTempo aux : this.getDocenteOcupado()) {
             //Inserir no inicio
             if(i==0) {
                 //Se o inicio de aux for depois do fim de intervalo
                 if(aux.getInicio().compareTo(intervalo.getFim()) >= 0) {
                     //Adicionar intervalo ao inicio da fila
-                    docenteOcupado.add(0, intervalo);
+                    this.getDocenteOcupado().add(0, intervalo);
                     return true;
                 }
             }
@@ -67,15 +66,15 @@ public class FuncionarioDocente extends Funcionario {
             //Se o fim de aux for antes do inicio de intervalo
             if(aux.getFim().compareTo(intervalo.getInicio()) <= 0) {
                 //Inserir no fim
-                if(docenteOcupado.size() == i+1) {
+                if(this.getDocenteOcupado().size() == i+1) {
                     //Adicionar no fim da lista
-                    docenteOcupado.add(i+1, intervalo);
+                    this.getDocenteOcupado().add(i+1, intervalo);
                     return true;
                 }
-                auxNext = docenteOcupado.get(i+1);
+                auxNext = this.getDocenteOcupado().get(i+1);
                 //Se o inicio de aux + 1 for maior que o fim de intervalo
                 if(auxNext.getInicio().compareTo(intervalo.getFim()) >= 0) {
-                    docenteOcupado.add(i+1, intervalo);
+                    this.getDocenteOcupado().add(i+1, intervalo);
                     return true;
                 }
             }
@@ -90,13 +89,13 @@ public class FuncionarioDocente extends Funcionario {
     //DUMB CONSTRUCTOR
     public FuncionarioDocente(String nome, String email, int numMecanografico, String categoria, String areaDeInvestigacao, ArrayList<IntervaloTempo> docenteOcupado) {
         super(nome, email, numMecanografico, categoria);
-        this.areaDeInvestigacao = areaDeInvestigacao;
-        this.docenteOcupado = docenteOcupado;
+        this.setAreaDeInvestigacao(areaDeInvestigacao);
+        this.setDocenteOcupado(docenteOcupado);
     }
     //NORMAL CONSTRUCTOR
     public FuncionarioDocente(String nome, String email, int numMecanografico, String categoria, String areaDeInvestigacao) {
         super(nome, email, numMecanografico, categoria);
-        this.areaDeInvestigacao = areaDeInvestigacao;
+        this.setAreaDeInvestigacao(areaDeInvestigacao);
     }
 
     //GETS

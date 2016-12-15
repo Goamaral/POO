@@ -17,6 +17,10 @@ public abstract class Exame {
     public abstract String toString();
 
     public void listarNotas() {
+        if(this.getResultados().size() == 0) {
+            System.out.println("Nao existem alunos inscritos");
+        }
+
         for(InscritoExame inscritoExame : this.getResultados()) {
             System.out.print(inscritoExame.getAluno().getNumAluno() + " " + inscritoExame.getAluno().getNome());
             if(Double.parseDouble(inscritoExame.getNota()) == 0) {
@@ -30,8 +34,7 @@ public abstract class Exame {
     public String toStringDetailed() {
         return this.getEpoca() +
                 " " + this.getDisciplina().getNome() +
-                " " + this.getData().getInicio().toString() +
-                " " + this.getData().getDuracao() +
+                " " + this.getData().toString() +
                 " " + this.getSala().getId() +
                 " " + this.getVigilantes().size() + " vigilantes " +
                 " " + this.getResultados().size() + " alunos inscritos";
@@ -48,7 +51,6 @@ public abstract class Exame {
     //TEST
     public void lancarNotas() {
         Random r = new Random();
-        double nota;
 
         if( vigilantes.size()==0 || assistentes.size()==0 ) return;
 
@@ -61,17 +63,33 @@ public abstract class Exame {
     //TEST
     public void listarFuncionarios() {
         System.out.println("Responsavel:");
-        System.out.println(this.getDocenteResponsavel().toStringDetailed());
+        System.out.println("\t" + this.getDocenteResponsavel().toStringDetailed());
+
+        System.out.println("");
 
         System.out.println("Vigilantes:");
-        for(FuncionarioDocente funcionarioDocente: this.getVigilantes()) {
-            System.out.println(funcionarioDocente.toStringDetailed());
+
+        if(this.getVigilantes().size() == 0) {
+            System.out.println("\tNao foram associados vigilantes");
         }
 
-        System.out.println("Assistentes:");
-        for(FuncionarioNaoDocente funcionarioNaoDocente: this.getAssistentes()) {
-            System.out.println(funcionarioNaoDocente.toStringDetailed());
+        for(FuncionarioDocente funcionarioDocente: this.getVigilantes()) {
+            System.out.println("\t" + funcionarioDocente.toStringDetailed());
         }
+
+        System.out.println("");
+
+        System.out.println("Assistentes:");
+
+        if(this.getAssistentes().size() == 0) {
+            System.out.println("\tNao foram associados assistentes");
+        }
+
+        for(FuncionarioNaoDocente funcionarioNaoDocente: this.getAssistentes()) {
+            System.out.println("\t" + funcionarioNaoDocente.toStringDetailed());
+        }
+
+        System.out.println("");
     }
 
     //TEST
@@ -114,6 +132,10 @@ public abstract class Exame {
     }
 
     public void listarAlunosInscritos(){
+        if(this.getResultados().size() == 0) {
+            System.out.println("Nao existem alunos inscritos");
+        }
+
         for (InscritoExame inscritoExame : this.getResultados()) {
             System.out.println(inscritoExame.getAluno().getNumAluno() +
                     " " + inscritoExame.getAluno().getNome() +
@@ -143,6 +165,7 @@ public abstract class Exame {
     public Exame(Disciplina disciplina, Sala sala, FuncionarioDocente docenteResponsavel, IntervaloTempo intervaloTempo) {
         this.disciplina = disciplina;
         this.sala = sala;
+        sala.inserirIntervalo(intervaloTempo.getInicio(), intervaloTempo.getDuracao());
         this.docenteResponsavel = docenteResponsavel;
         this.data = intervaloTempo;
     }
