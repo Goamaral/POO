@@ -10,7 +10,7 @@ public class Gestor {
     private static ArrayList<Pessoa> pessoas = new ArrayList<>();
     private static ArrayList<Curso> cursos = new ArrayList<>();
     private ArrayList<Sala> salas = new ArrayList<>();
-    private ArrayList<String> historico;
+    private ArrayList<String> historico = new ArrayList<>();
     private String importFileName;
     private String exportFileName;
     private static String[] menuPrincipal = {"Listar", "Criar exames", "Configurar exames", "Lancar notas" , "Sair"};
@@ -19,12 +19,17 @@ public class Gestor {
 
     public static void main(String[] args) {
 
-        try {
+        /*try {
             carregarDados();
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
 
+        while(true) {
+            if(menu() == 0) {
+                break;
+            }
+        }
 
         try {
             guardarDados();
@@ -33,14 +38,9 @@ public class Gestor {
         }
 
         sair();
-        while(true) {
-            if(menu() == 0) {
-                break;
-            }
-        }
-        sair();
     }
 
+    //Listar exames em exames
     private static void listarExames() {
         //Imprimir exames
         for (Exame exame : exames) {
@@ -50,6 +50,7 @@ public class Gestor {
         }
     }
 
+    //Criar menu de escolha com a lista de todos os exames e devolver o exame escolhido
     private static Exame escolhaListaExames() {
         int i = 0;
         int opcaoInteger;
@@ -79,18 +80,8 @@ public class Gestor {
         }
     }
 
-    private static void listarAlunosInscritosExame(Exame exame) {
-        for (InscritoExame inscritoExame : exame.getResultados()) {
-            System.out.println(inscritoExame.getAluno().getNumAluno() +
-                    " " + inscritoExame.getAluno().getNome() +
-                    " ano: " + inscritoExame.getAluno().getAno() +
-                    " curso: " + inscritoExame.getAluno().getCurso().getNome() +
-                    " regime: " + inscritoExame.getAluno().getRegime() +
-                    " email: " + inscritoExame.getAluno().getEmail());
-        }
-    }
-
-    private static ArrayList<Aluno> getAlunos() {
+    //Devolver todos os alunos que estao inscritos em exames, sem repeticao de alunos
+    private static ArrayList<Aluno> getAlunosInscritosExames() {
         ArrayList<Aluno> out = new ArrayList<>();
 
         for(Exame exame : exames) {
@@ -99,14 +90,24 @@ public class Gestor {
                 if (!out.contains(inscritoExame.getAluno())) out.add(inscritoExame.getAluno());
         }
 
+        if(out.size() == 0) {
+            System.out.println("Nao foram encontrados alunos inscritos");
+            return null;
+        }
+
         return out;
     }
 
-    private static Aluno escolhaListaAlunos() {
+    //Criar menu de escolha com a lista de todos os alunos inscritos em exames, sem repeticao, e devolver o aluno escolhido
+    private static Aluno escolhaListaAlunosInscritosExame() {
         int i = 0;
         int opcaoInteger;
         Scanner scanner = new Scanner(System.in);
-        ArrayList<Aluno> alunos = getAlunos();
+        ArrayList<Aluno> alunos = getAlunosInscritosExames();
+
+        if(alunos == null) {
+            return null;
+        }
 
         for(Aluno aluno : alunos) {
             System.out.println("[" + i + "]" + aluno.getNumAluno() +
@@ -133,54 +134,17 @@ public class Gestor {
         }
     }
 
-    private static void listarExamesAluno(Aluno aluno) {
-        for(Exame exame : exames) {
-            for(InscritoExame inscritoExame : exame.getResultados()) {
-                if(inscritoExame.getAluno().equals(aluno)) {
-                    System.out.printf("%s, %s, %s, %s, %s, %s, %s",
-                            exame.getEpoca(), exame.getDisciplina().getNome(), exame.getData().getInicio(), exame.getData().getDuracao(),
-                            exame.getSala().getId(), exame.getVigilantes().size(), exame.getResultados().size());
-                }
-            }
-        }
-    }
-
+    //Verificar se existem exames no sistema
     private static boolean examesDisponiveis() {
-        if(exames == null) {
+        if(exames.size() == 0) {
             System.out.println("Nao existem exames no sistema");
             return false;
         }
         return true;
     }
 
-    private static void listarFuncionariosExame(Exame exame) {
-        System.out.println("Responsavel:");
-        System.out.println(exame.getDocenteResponsavel().getNumMecanografico() + " "
-                + exame.getDocenteResponsavel().getNome() + " "
-                + exame.getDocenteResponsavel().getCategoria() + " "
-                + exame.getDocenteResponsavel().getAreaDeInvestigacao() + " "
-                + exame.getDocenteResponsavel().getEmail());
-
-        System.out.println("Vigilantes:");
-        for(FuncionarioDocente funcionarioDocente: exame.getVigilantes()) {
-            System.out.println(funcionarioDocente.getNumMecanografico() + " "
-                    + funcionarioDocente.getNome() + " "
-                    + funcionarioDocente.getCategoria() + " "
-                    + funcionarioDocente.getAreaDeInvestigacao() + " "
-                    + funcionarioDocente.getEmail());
-        }
-
-        System.out.println("Assistentes:");
-        for(FuncionarioNaoDocente funcionarioNaoDocente: exame.getAssistentes()) {
-            System.out.println(funcionarioNaoDocente.getNumMecanografico() + " "
-                    + funcionarioNaoDocente.getNome() + " "
-                    + funcionarioNaoDocente.getCategoria() + " "
-                    + funcionarioNaoDocente.getCargo() + " "
-                    + funcionarioNaoDocente.getEmail());
-        }
-    }
-
-    private static ArrayList<Funcionario> getFuncionarios() {
+    //Devolver todos os funcionarios assoaciados a exames, sem repeticao de funcionarios
+    private static ArrayList<Funcionario> getFuncionariosExames() {
         ArrayList<Funcionario> out = new ArrayList<>();
 
         for(Exame exame : exames) {
@@ -197,30 +161,32 @@ public class Gestor {
             }
         }
 
+        if(out.size() == 0) {
+            System.out.println("Nao foram encontrados funcionarios");
+            return null;
+        }
+
         return out;
     }
 
+    //Criar menu de escolha com a lista de todos os funcionarios associados a exames, sem repeticao, e devolver o funcionario escolhido
     private static Funcionario escolhaListaFuncionarios() {
         int i = 0;
         int opcaoInteger;
         Scanner scanner = new Scanner(System.in);
-        ArrayList<Funcionario> funcionarios = getFuncionarios();
+        ArrayList<Funcionario> funcionarios = getFuncionariosExames();
+
+        if(funcionarios == null) {
+            return null;
+        }
 
         for(Funcionario funcionario : funcionarios) {
             if(funcionario instanceof FuncionarioDocente) {
-                System.out.println("[" + i + "] " + funcionario.getNumMecanografico() + " "
-                        + funcionario.getNome() + " "
-                        + funcionario.getCategoria() + " "
-                        + ((FuncionarioDocente)funcionario).getAreaDeInvestigacao() + " "
-                        + funcionario.getEmail());
+                System.out.println("[" + i + "] " + funcionario.toStringDetailed());
             }
 
             if(funcionario instanceof FuncionarioNaoDocente) {
-                System.out.println("[" + i + "] " + funcionario.getNumMecanografico() + " "
-                        + funcionario.getNome() + " "
-                        + funcionario.getCategoria() + " "
-                        + ((FuncionarioNaoDocente)funcionario).getCargo() + " "
-                        + funcionario.getEmail());
+                System.out.println("[" + i + "] " + funcionario.toStringDetailed());
             }
             ++i;
         }
@@ -241,48 +207,7 @@ public class Gestor {
         }
     }
 
-    private static void listarExamesFuncionario(Funcionario funcionario) {
-        for(Exame exame : exames) {
-            if(funcionario instanceof FuncionarioDocente) {
-                if (exame.getDocenteResponsavel().equals(funcionario)) {
-                    System.out.printf("%s, %s, %s, %s, %s, %s, %s",
-                            exame.getEpoca(), exame.getDisciplina().getNome(), exame.getData().getInicio(), exame.getData().getDuracao(),
-                            exame.getSala().getId(), exame.getVigilantes().size(), exame.getResultados().size());
-                }
-
-                if (exame.getVigilantes().contains(funcionario)) {
-                    System.out.printf("%s, %s, %s, %s, %s, %s, %s",
-                            exame.getEpoca(), exame.getDisciplina().getNome(), exame.getData().getInicio(), exame.getData().getDuracao(),
-                            exame.getSala().getId(), exame.getVigilantes().size(), exame.getResultados().size());
-                }
-            }
-
-            if(funcionario instanceof FuncionarioNaoDocente) {
-                if (exame.getAssistentes().contains(funcionario)) {
-                    System.out.printf("%s, %s, %s, %s, %s, %s, %s",
-                            exame.getEpoca(), exame.getDisciplina().getNome(), exame.getData().getInicio(), exame.getData().getDuracao(),
-                            exame.getSala().getId(), exame.getVigilantes().size(), exame.getResultados().size());
-                }
-            }
-        }
-    }
-
-    private static void listarNotasExame(Exame exame) {
-        for(InscritoExame inscritoExame : exame.getResultados()) {
-            System.out.print(inscritoExame.getAluno().getNumAluno() +
-                    " " + inscritoExame.getAluno().getNome() +
-                    " ano: " + inscritoExame.getAluno().getAno() +
-                    " curso: " + inscritoExame.getAluno().getCurso().getNome() +
-                    " regime: " + inscritoExame.getAluno().getRegime() +
-                    " email: " + inscritoExame.getAluno().getEmail());
-            if(Double.parseDouble(inscritoExame.getNota()) == 0) {
-                System.out.print(" Nota: ainda nao foi lançada\n");
-            } else {
-                System.out.print(" Nota: " + inscritoExame.getNota() + "\n");
-            }
-        }
-    }
-
+    //Devolver todos os docentes em pessoas
     private static ArrayList<FuncionarioDocente> getDocentesPessoas() {
         ArrayList<FuncionarioDocente> out = new ArrayList<>();
 
@@ -299,6 +224,7 @@ public class Gestor {
         return null;
     }
 
+    //Criar menu para criar um objecto FuncionarioDocente e devolver o mesmo
     private static FuncionarioDocente criarDocente() {
         FuncionarioDocente out;
         Scanner sc = new Scanner(System.in);
@@ -441,7 +367,8 @@ public class Gestor {
         return out;
     }
 
-    private static FuncionarioDocente escolhaVigilanteListaPessoas() {
+    //Criar menu de escolha com a lista de todos os objectos do tipo FuncionarioDocente na lista de pessoas e devolver o FuncionarioDocente escolhido
+    private static FuncionarioDocente escolhaFuncionarioDocenteListaPessoas() {
         Scanner sc = new Scanner(System.in);
         int i = 0;
         int opcao;
@@ -483,7 +410,8 @@ public class Gestor {
         }
     }
 
-    private static ArrayList<FuncionarioNaoDocente> getAssistentesPessoas() {
+    //Devolver todos os funcionarios nao docentes em pessoas
+    private static ArrayList<FuncionarioNaoDocente> getFuncionarioNaoDocentePessoas() {
         ArrayList<FuncionarioNaoDocente> out = new ArrayList<>();
 
         for(Pessoa pessoa : pessoas) {
@@ -499,6 +427,7 @@ public class Gestor {
         return null;
     }
 
+    //Criar menu para criar um objecto FuncionarioNaoDocente e devolver o mesmo
     private static FuncionarioNaoDocente criarAssistente() {
         FuncionarioNaoDocente out;
         Scanner sc = new Scanner(System.in);
@@ -641,11 +570,12 @@ public class Gestor {
         return out;
     }
 
-    private static FuncionarioNaoDocente escolhaAssistenteListaPessoas() {
+    //Criar menu de escolha com a lista de todos os objectos do tipo FuncionarioNaoDocente na lista de pessoas e devolver o FuncionarioNaoDocente escolhido
+    private static FuncionarioNaoDocente escolhaFuncionarioNaoDocenteListaPessoas() {
         Scanner sc = new Scanner(System.in);
         int i = 0;
         int opcao;
-        ArrayList<FuncionarioNaoDocente> funcionarioNaoDocentes = getAssistentesPessoas();
+        ArrayList<FuncionarioNaoDocente> funcionarioNaoDocentes = getFuncionarioNaoDocentePessoas();
 
         if(funcionarioNaoDocentes == null) {
             return null;
@@ -683,6 +613,7 @@ public class Gestor {
         }
     }
 
+    //Devolver todos os alunos em pessoas
     private static ArrayList<Aluno> getAlunosPessoas() {
         ArrayList<Aluno> out = new ArrayList<>();
 
@@ -699,6 +630,7 @@ public class Gestor {
         return null;
     }
 
+    //Devolver todos os cursos que incluem um dada disciplina
     private static ArrayList<Curso> getCursosComDisciplina(Disciplina disciplina) {
         ArrayList<Curso> out = new ArrayList<>();
 
@@ -715,6 +647,7 @@ public class Gestor {
         return out;
     }
 
+    //Criar menu de escolha com a lista de todos os cursos que contem uma dada disciplina e devolver curso escolhido
     private static Curso escolhaListaCursosComDisciplina(Disciplina disciplina) {
         int i = 0;
         int opcaoInteger;
@@ -748,6 +681,7 @@ public class Gestor {
         }
     }
 
+    //Criar menu para criar um objecto Aluno e devolver o mesmo
     private static Aluno criarAluno(Disciplina disciplina) {
         Aluno out;
         Scanner sc = new Scanner(System.in);
@@ -901,6 +835,7 @@ public class Gestor {
         return out;
     }
 
+    //Criar menu de escoha com lista de todos os alunos em pessoas e devolver alunoescolhido
     private static Aluno escolhaAlunoListaPessoas(Disciplina disciplina) {
         Scanner sc = new Scanner(System.in);
         int i = 0;
@@ -912,11 +847,7 @@ public class Gestor {
         }
 
         for(Aluno aluno : alunos) {
-            System.out.println(aluno.getNumAluno() +
-                    " " + aluno.getNome() +
-                    " ano: " + aluno.getAno() +
-                    " curso: " + aluno.getCurso().getNome() +
-                    " regime: " + aluno.getRegime());
+            System.out.println(aluno.toStringDetailed());
 
             ++i;
         }
@@ -943,6 +874,7 @@ public class Gestor {
         }
     }
 
+    //Guardas dados em ficheiro
     private static void guardarDados() throws IOException {
         FileWriter cursosFile =  new FileWriter("cursos.txt");
         for(Curso curso : cursos) {
@@ -972,6 +904,7 @@ public class Gestor {
 
     }
 
+    /*
     private static void carregarDados() throws IOException {
         FileReader cursosFile = new FileReader("cursos.txt");
         BufferedReader cursosBuffer = new BufferedReader(cursosFile);
@@ -1016,6 +949,7 @@ public class Gestor {
 
         cursosFile.close();
     }
+    */
 
     private static void sair() {
         System.exit(0);
@@ -1071,7 +1005,7 @@ public class Gestor {
                             auxExame = escolhaListaExames();
 
                             if(auxExame != null) {
-                                listarAlunosInscritosExame(auxExame);
+                                auxExame.listarAlunosInscritos();
                             }
                         }
 
@@ -1082,10 +1016,10 @@ public class Gestor {
                         System.out.println("\n--- Listar exames de um aluno ---");
 
                         if(examesDisponiveis()) {
-                            auxAluno = escolhaListaAlunos();
+                            auxAluno = escolhaListaAlunosInscritosExame();
 
                             if(auxAluno != null) {
-                                listarExamesAluno(auxAluno);
+                                auxAluno.listarExames(exames);
                             }
                         }
 
@@ -1099,7 +1033,7 @@ public class Gestor {
                             auxExame = escolhaListaExames();
 
                             if(auxExame != null) {
-                                listarFuncionariosExame(auxExame);
+                                auxExame.listarFuncionarios();
                             }
                         }
 
@@ -1112,7 +1046,7 @@ public class Gestor {
                             auxFuncionario = escolhaListaFuncionarios();
 
                             if(auxFuncionario != null) {
-                                listarExamesFuncionario(auxFuncionario);
+                                auxFuncionario.listarExames(exames);
                             }
                         }
 
@@ -1124,7 +1058,7 @@ public class Gestor {
                         if(examesDisponiveis()) {
                             auxExame = escolhaListaExames();
                             if(auxExame != null) {
-                                listarNotasExame(auxExame);
+                                auxExame.listarNotas();
                             }
                         }
 
@@ -1163,7 +1097,7 @@ public class Gestor {
                             case 0:
                                 System.out.println("--- Associar vigilante ---");
                                 //Escolher funcionario ou criar um
-                                auxFuncionario = escolhaVigilanteListaPessoas();
+                                auxFuncionario = escolhaFuncionarioDocenteListaPessoas();
                                 if(auxFuncionario != null) {
                                     //Se conseg
                                     auxExame.inserirDocente((FuncionarioDocente)auxFuncionario);
@@ -1172,7 +1106,7 @@ public class Gestor {
                             //Associar assistente
                             case 1:
                                 System.out.println("--- Associar assistente ---");
-                                auxFuncionario = escolhaAssistenteListaPessoas();
+                                auxFuncionario = escolhaFuncionarioNaoDocenteListaPessoas();
                                 if(auxFuncionario != null) {
                                     auxExame.inserirAssistente((FuncionarioNaoDocente)auxFuncionario);
                                 }

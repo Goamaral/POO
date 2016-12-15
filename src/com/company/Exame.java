@@ -16,6 +16,27 @@ public abstract class Exame {
     //PUBLIC METHODS
     public abstract String toString();
 
+    public void listarNotas() {
+        for(InscritoExame inscritoExame : this.getResultados()) {
+            System.out.print(inscritoExame.getAluno().getNumAluno() + " " + inscritoExame.getAluno().getNome());
+            if(Double.parseDouble(inscritoExame.getNota()) == 0) {
+                System.out.print(" Nota: ainda nao foi lançada\n");
+            } else {
+                System.out.print(" Nota: " + inscritoExame.getNota() + "\n");
+            }
+        }
+    }
+
+    public String toStringDetailed() {
+        return this.getEpoca() +
+                " " + this.getDisciplina().getNome() +
+                " " + this.getData().getInicio().toString() +
+                " " + this.getData().getDuracao() +
+                " " + this.getSala().getId() +
+                " " + this.getVigilantes().size() + " vigilantes " +
+                " " + this.getResultados().size() + " alunos inscritos";
+    }
+
     //TEST
     public boolean verificarAlunoInscritoDisciplina(Aluno aluno, Disciplina disciplina) {
         //Verificar se aluno esta inscrito
@@ -39,31 +60,17 @@ public abstract class Exame {
 
     //TEST
     public void listarFuncionarios() {
-        System.out.println("Docente resposavel: " + docenteResponsavel.getNome());
+        System.out.println("Responsavel:");
+        System.out.println(this.getDocenteResponsavel().toStringDetailed());
 
-        System.out.println("\nVigilantes:");
-        if( vigilantes.size()!= 0 ) {
-            for(Funcionario funcionario : vigilantes) {
-                System.out.println(funcionario.getNome());
-            }
-        } else {
-            System.out.println("Nao foram associados vigilantes");
+        System.out.println("Vigilantes:");
+        for(FuncionarioDocente funcionarioDocente: this.getVigilantes()) {
+            System.out.println(funcionarioDocente.toStringDetailed());
         }
 
-        System.out.println("\nAssistentes:");
-        if( assistentes.size()!= 0 ) {
-            for(Funcionario funcionario : assistentes) {
-                System.out.println(funcionario.getNome());
-            }
-        } else {
-            System.out.println("Nao foram associados assistentes");
-        }
-    }
-
-    //TEST
-    public void listarNota() {
-        for(InscritoExame inscritoExame : resultados) {
-            System.out.println("Aluno: " + inscritoExame.getAluno() + " Nota: " + inscritoExame.getNota());
+        System.out.println("Assistentes:");
+        for(FuncionarioNaoDocente funcionarioNaoDocente: this.getAssistentes()) {
+            System.out.println(funcionarioNaoDocente.toStringDetailed());
         }
     }
 
@@ -103,6 +110,17 @@ public abstract class Exame {
             System.out.println("Funcionario ja pertence ao grupo de assistentes");
         } else {
             assistentes.add(funcionario);
+        }
+    }
+
+    public void listarAlunosInscritos(){
+        for (InscritoExame inscritoExame : this.getResultados()) {
+            System.out.println(inscritoExame.getAluno().getNumAluno() +
+                    " " + inscritoExame.getAluno().getNome() +
+                    " ano: " + inscritoExame.getAluno().getAno() +
+                    " curso: " + inscritoExame.getAluno().getCurso().getNome() +
+                    " regime: " + inscritoExame.getAluno().getRegime() +
+                    " email: " + inscritoExame.getAluno().getEmail());
         }
     }
 

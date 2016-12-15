@@ -6,6 +6,14 @@ public class FuncionarioDocente extends Funcionario {
     private String areaDeInvestigacao;
     private ArrayList<IntervaloTempo> docenteOcupado = new ArrayList<>();
 
+    public String toStringDetailed() {
+        return this.getNumMecanografico() +
+                " " + this.getNome() +
+                " Categoria: " + this.getCategoria() +
+                " Area: " + this.getAreaDeInvestigacao() +
+                " Email: " + this.getEmail();
+    }
+
     public String toString() {
         StringBuilder out = new StringBuilder(super.getNome() +
                 "|" + super.getEmail() +

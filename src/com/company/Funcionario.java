@@ -9,10 +9,16 @@ public abstract class Funcionario extends Pessoa {
     //PUBLIC METHODS
     public abstract String toStringBasic();
     public abstract String toString();
+    public abstract String toStringDetailed();
 
     public void listarExames(ArrayList<Exame> exames) {
-        for(Exame exame : exames){
-            System.out.println("Disciplina: " + exame.getDisciplina().getNome() + "\nData: " + exame.getData().getInicio().toString() + "\nSala: " + exame.getSala().getId() + "\n");
+        for(Exame exame : exames) {
+            if (exame.getDocenteResponsavel().equals(this) ||
+                    exame.getVigilantes().contains(this) ||
+                    exame.getAssistentes().contains(this))
+            {
+                System.out.println(exame.toStringDetailed());
+            }
         }
     }
 

@@ -13,12 +13,19 @@ public class Aluno extends Pessoa {
         return super.getNome() + "|" + numAluno + "|" + ano + "|" + regime + "\n";
     }
 
-    //TEST
-    public void listarClassificacoes(ArrayList<Exame> exames) {
+    public String toStringDetailed() {
+        return this.getNumAluno() +
+                " " + this.getNome() +
+                " ano: " + this.getAno() +
+                " curso: " + this.getCurso().getNome() +
+                " regime: " + this.getRegime();
+    }
+
+    public void listarExames(ArrayList<Exame> exames) {
         for(Exame exame : exames) {
-            for(InscritoExame inscrito : exame.getResultados()) {
-                if( inscrito.getAluno().equals(this) ) {
-                    System.out.println(exame.getData().getInicio() + " Disciplina: " + exame.getDisciplina().getNome() + " Nota: " + inscrito.getNota());
+            for(InscritoExame inscritoExame : exame.getResultados()) {
+                if(inscritoExame.getAluno().equals(this)) {
+                    System.out.printf(exame.toStringDetailed());
                 }
             }
         }

@@ -1,6 +1,0 @@
-Prof1|email1@domain|1|assistente|sistemas de informação
-	30|05 Feb 2017 10:30:45
-Prof2|email2@domain|2|assistente|sistemas de informação
-	30|05 Feb 2017 10:30:45
-Goa|26111997|2|Normal
-Fun1|email3@domain|3|assistente opereacional|secretaria

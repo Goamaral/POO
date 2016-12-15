@@ -1,7 +1,18 @@
 package com.company;
 
+import java.sql.Array;
+import java.util.ArrayList;
+
 public class FuncionarioNaoDocente extends Funcionario {
     private String cargo;
+
+    public String toStringDetailed() {
+        return this.getNumMecanografico() +
+                " " + this.getNome() +
+                " Categoria: " + this.getCategoria() +
+                " Cargo: " + this.getCargo() +
+                " Email: " + this.getEmail();
+    }
 
     public String toString() {
         StringBuilder out = new StringBuilder(super.getNome() +
