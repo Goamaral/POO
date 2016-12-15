@@ -19,6 +19,10 @@ public class Curso {
     public Curso() {
     }
 
+    public String toStringDetailed() {
+        return this.getNome() + " " + getGrauConfere() + " " + this.getDuracao() + " anos";
+    }
+
     public String toString() {
         StringBuilder out = new StringBuilder(getNome() + "|" + getDuracao() + "|" + getGrauConfere() + "\n");
         ArrayList<StringBuilder> cap;

@@ -3,6 +3,7 @@ package com.company;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Random;
+import java.util.Scanner;
 
 public abstract class Exame {
     private Disciplina disciplina;
@@ -95,10 +96,39 @@ public abstract class Exame {
     //TEST
     public void inscreverAluno(Aluno aluno) {
         InscritoExame inscrito = new InscritoExame(aluno);
+        Scanner sc = new Scanner(System.in);
+        String opcao;
+        boolean repeat;
 
         if( !verificarAlunoInscritoDisciplina(aluno, this.disciplina)) {
             System.out.println("O aluno nao esta inscrito a disciplina");
-            return;
+
+            do {
+                repeat = false;
+                System.out.println("Pretende que o aluno se inscreva? (s/n)");
+                System.out.print("\nOpcao: ");
+
+                opcao = sc.nextLine();
+
+                if(opcao.length() != 1) {
+                    System.out.println("Opcao invalida");
+                    repeat = true;
+                }
+
+                if(!repeat) {
+                    if(!opcao.equals("s") && !opcao.equals("n")) {
+                        System.out.println("Opcao invalida");
+                        repeat = true;
+                    }
+                }
+            } while(repeat);
+
+            if(opcao.equals("s")) {
+                this.getDisciplina().inscreverAluno(aluno);
+                System.out.println("Aluno adicionado à disciplina");
+            } else {
+                return;
+            }
         }
 
         if( verificarAcessoExame(aluno) ) {

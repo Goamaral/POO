@@ -265,17 +265,42 @@ public class Gestor {
         return null;
     }
 
+    private static boolean numMecanograficoDisponivel(int num) {
+        for(Pessoa pessoa : pessoas) {
+            if(pessoa instanceof Aluno) {
+                if( ((Aluno) pessoa).getNumAluno() == num ) {
+                    System.out.println("Numero mecanografico ja existente");
+                    return false;
+                }
+            } else if(pessoa instanceof FuncionarioDocente){
+                if( ((FuncionarioDocente) pessoa).getNumMecanografico() == num ) {
+                    System.out.println("Numero mecanografico ja existente");
+                    return false;
+                }
+            } else if( pessoa instanceof FuncionarioNaoDocente ) {
+                if( ((FuncionarioNaoDocente) pessoa).getNumMecanografico() == num ) {
+                    System.out.println("Numero mecanografico ja existente");
+                    return  false;
+                }
+            }
+        }
+
+        return true;
+    }
+
     //Criar menu para criar um objecto FuncionarioDocente e devolver o mesmo
     private static FuncionarioDocente criarDocente() {
         FuncionarioDocente out;
         Scanner sc = new Scanner(System.in);
-        String infoString, nome, email,categoria, areaDeInvestigacao;
+        String infoString, nome, email,categoria = "Erro", areaDeInvestigacao = "Erro";
         String[] infoArray;
-        int numMecanografico, opcao;
+        int numMecanografico = -1, opcao = -1;
         String[] menuCategoria = {"Assistente", "Auxiliar", "Associado", "Catedratico"};
         String[] menuAreaInvestigacao = {"sistemas de informação", "comunicação e telemática", "engenharia de software"};
+        boolean repeat;
 
         while(true){
+            repeat = false;
             System.out.println("Para voltar ao menu principal envie uma resposta vazia");
             System.out.print("Nome: ");
             nome = sc.nextLine();
@@ -289,15 +314,18 @@ public class Gestor {
                 //Pode conter letras e espaços
                 if (!isLetter(c) && c != ' ') {
                     System.out.println("Nome invalido");
-                    continue;
+                    repeat = true;
                 }
             }
 
             //Passou todos os testes
-            break;
+            if(!repeat) {
+                break;
+            }
         }
 
         while(true) {
+            repeat = false;
             System.out.println("Para voltar ao menu principal envie uma resposta vazia");
             System.out.print("Email: ");
             email = sc.nextLine();
@@ -311,13 +339,17 @@ public class Gestor {
             //So pode conter um @
             if(infoArray.length != 2) {
                 System.out.println("Email invalido");
+                repeat = true;
             }
 
             //Passou todos os testes
-            break;
+            if(!repeat) {
+                break;
+            }
         }
 
         while(true) {
+            repeat = false;
             System.out.println("Para voltar ao menu principal envie uma resposta vazia");
             System.out.print("Numero Mecanografico: ");
 
@@ -331,18 +363,28 @@ public class Gestor {
                 numMecanografico = Integer.parseInt(infoString);
             } catch (NumberFormatException e) {
                 System.out.println("Apenas podem ser inseridos numeros");
-                continue;
+                repeat = true;
+            }
+
+            //Verificar se numero ja existe
+            if(!repeat) {
+                repeat = !numMecanograficoDisponivel(numMecanografico);
             }
 
             //Passou todos os testes
-            break;
+            if(!repeat) {
+                break;
+            }
         }
 
         while (true) {
+            repeat = false;
             System.out.println("Para voltar ao menu principal envie uma resposta vazia");
             System.out.println("Escolha uma categoria:");
             printMenu(menuCategoria);
 
+            System.out.print("\nOpcao: ");
+
             infoString = sc.nextLine();
 
             if(infoString.equals("")) {
@@ -353,25 +395,32 @@ public class Gestor {
                 opcao = Integer.parseInt(infoString);
             } catch (NumberFormatException e) {
                 System.out.println("Opcao invalida");
-                continue;
+                repeat = true;
             }
 
-            try {
-                categoria = menuCategoria[opcao];
-            } catch(IndexOutOfBoundsException e) {
-                System.out.println("Opcao invalida");
-                continue;
+            if(!repeat) {
+                try {
+                    categoria = menuCategoria[opcao];
+                } catch (IndexOutOfBoundsException e) {
+                    System.out.println("Opcao invalida");
+                    repeat = true;
+                }
             }
 
             //Passou todos os testes
-            break;
+            if(!repeat) {
+                break;
+            }
         }
 
         while(true) {
+            repeat = false;
             System.out.println("Para voltar ao menu principal envie uma resposta vazia");
             System.out.println("Escolha uma area de investigacao:");
             printMenu(menuAreaInvestigacao);
 
+            System.out.print("\nOpcao: ");
+
             infoString = sc.nextLine();
 
             if(infoString.equals("")) {
@@ -382,18 +431,22 @@ public class Gestor {
                 opcao = Integer.parseInt(infoString);
             } catch (NumberFormatException e) {
                 System.out.println("Opcao invalida");
-                continue;
+                repeat = true;
             }
 
-            try {
-                areaDeInvestigacao = menuCategoria[opcao];
-            } catch(IndexOutOfBoundsException e) {
-                System.out.println("Opcao invalida");
-                continue;
+            if(!repeat) {
+                try {
+                    areaDeInvestigacao = menuAreaInvestigacao[opcao];
+                } catch (IndexOutOfBoundsException e) {
+                    System.out.println("Opcao invalida");
+                    repeat = true;
+                }
             }
 
             //Passou todos os testes
-            break;
+            if(!repeat) {
+                break;
+            }
         }
 
 
@@ -472,131 +525,135 @@ public class Gestor {
     private static FuncionarioNaoDocente criarAssistente() {
         FuncionarioNaoDocente out;
         Scanner sc = new Scanner(System.in);
-        String infoString, nome, email,categoria, cargo;
+        String infoString, nome, email,categoria = "Erro", cargo = "Erro";
         String[] infoArray;
-        int numMecanografico, opcao;
+        int numMecanografico = 0, opcao = 0;
         String[] menuCategoria = {"assistente operacional", "assistente técnico", "técnico superior","técnico de informática", "especialista de informática"};
         String[] menuCargo = {"secretaria", "financeiro", "apoio técnico"};
+        boolean repeat;
 
         while(true){
-            System.out.println("Para voltar ao menu principal envie uma resposta vazia");
+            repeat = false;
             System.out.print("Nome: ");
             nome = sc.nextLine();
-
-            if(nome.equals("")) {
-                return null;
-            }
 
             //Verificar nome valido
             for (char c : nome.toCharArray()) {
                 //Pode conter letras e espaços
                 if (!isLetter(c) && c != ' ') {
                     System.out.println("Nome invalido");
-                    continue;
+                    repeat = true;
                 }
             }
 
             //Passou todos os testes
-            break;
+            if(!repeat) {
+                break;
+            }
         }
 
         while(true) {
-            System.out.println("Para voltar ao menu principal envie uma resposta vazia");
+            repeat = false;
             System.out.print("Email: ");
             email = sc.nextLine();
-
-            if(email.equals("")) {
-                return null;
-            }
 
             infoArray = email.split("@");
 
             //So pode conter um @
             if(infoArray.length != 2) {
                 System.out.println("Email invalido");
+                repeat = true;
             }
 
             //Passou todos os testes
-            break;
+            if(!repeat) {
+                break;
+            }
         }
 
         while(true) {
-            System.out.println("Para voltar ao menu principal envie uma resposta vazia");
+            repeat = false;
             System.out.print("Numero Mecanografico: ");
 
             infoString = sc.nextLine();
-
-            if(email.equals("")) {
-                return null;
-            }
 
             try {
                 numMecanografico = Integer.parseInt(infoString);
             } catch (NumberFormatException e) {
                 System.out.println("Apenas podem ser inseridos numeros");
-                continue;
+                repeat = true;
+            }
+
+            if(!repeat) {
+                repeat = !numMecanograficoDisponivel(numMecanografico);
             }
 
             //Passou todos os testes
-            break;
+            if(!repeat) {
+                break;
+            }
         }
 
         while (true) {
-            System.out.println("Para voltar ao menu principal envie uma resposta vazia");
+            repeat = false;
             System.out.println("Escolha uma categoria:");
             printMenu(menuCategoria);
 
-            infoString = sc.nextLine();
+            System.out.print("\nOpcao: ");
 
-            if(infoString.equals("")) {
-                return null;
-            }
+            infoString = sc.nextLine();
 
             try {
                 opcao = Integer.parseInt(infoString);
             } catch (NumberFormatException e) {
                 System.out.println("Opcao invalida");
-                continue;
+                repeat = true;
             }
 
-            try {
-                categoria = menuCategoria[opcao];
-            } catch(IndexOutOfBoundsException e) {
-                System.out.println("Opcao invalida");
-                continue;
+            if(!repeat) {
+                try {
+                    categoria = menuCategoria[opcao];
+                } catch (IndexOutOfBoundsException e) {
+                    System.out.println("Opcao invalida");
+                    repeat = true;
+                }
             }
 
             //Passou todos os testes
-            break;
+            if(!repeat) {
+                break;
+            }
         }
 
         while(true) {
-            System.out.println("Para voltar ao menu principal envie uma resposta vazia");
-            System.out.println("Escolha uma area de investigacao:");
+            repeat = false;
+            System.out.println("Escolha uma area de investigacao:\n");
             printMenu(menuCargo);
 
-            infoString = sc.nextLine();
+            System.out.print("\nOpcao: ");
 
-            if(infoString.equals("")) {
-                return null;
-            }
+            infoString = sc.nextLine();
 
             try {
                 opcao = Integer.parseInt(infoString);
             } catch (NumberFormatException e) {
                 System.out.println("Opcao invalida");
-                continue;
+                repeat = true;
             }
 
-            try {
-                cargo = menuCategoria[opcao];
-            } catch(IndexOutOfBoundsException e) {
-                System.out.println("Opcao invalida");
-                continue;
+            if(!repeat) {
+                try {
+                    cargo = menuCategoria[opcao];
+                } catch (IndexOutOfBoundsException e) {
+                    System.out.println("Opcao invalida");
+                    repeat = true;
+                }
             }
 
             //Passou todos os testes
-            break;
+            if(!repeat) {
+                break;
+            }
         }
 
 
@@ -623,17 +680,13 @@ public class Gestor {
         }
 
         for(FuncionarioNaoDocente funcionarioNaoDocente : funcionarioNaoDocentes) {
-            System.out.println("[" + i + "] " + funcionarioNaoDocente.getNumMecanografico() + " "
-                    + funcionarioNaoDocente.getNome() + " "
-                    + funcionarioNaoDocente.getCategoria() + " "
-                    + funcionarioNaoDocente.getCargo() + " "
-                    + funcionarioNaoDocente.getEmail());
+            System.out.println("[" + i + "] " + funcionarioNaoDocente.toStringDetailed());
 
             ++i;
         }
 
         System.out.println("[" + i + "] Criar assistente");
-        System.out.print("Opcao: ");
+        System.out.print("\nOpcao: ");
 
         try {
             opcao = Integer.parseInt(sc.nextLine());
@@ -644,7 +697,7 @@ public class Gestor {
 
         try {
             return funcionarioNaoDocentes.get(opcao);
-        } catch(ArrayIndexOutOfBoundsException e) {
+        } catch(IndexOutOfBoundsException e) {
             //ultima opcao
             if(opcao == funcionarioNaoDocentes.size()) {
                 return criarAssistente();
@@ -700,13 +753,11 @@ public class Gestor {
         }
 
         for(Curso curso : cursos) {
-            System.out.println("[" + i + "] " + curso.getNome() +
-                    " Duracao: " + curso.getDuracao() +
-                    " Grau: " + curso.getGrauConfere());
+            System.out.println("[" + i + "] " + curso.toStringDetailed());
             ++i;
         }
 
-        System.out.print("Opcao: ");
+        System.out.print("\nOpcao: ");
         try {
             opcaoInteger = Integer.parseInt(scanner.nextLine());
         } catch (NumberFormatException e) {
@@ -726,137 +777,144 @@ public class Gestor {
     private static Aluno criarAluno(Disciplina disciplina) {
         Aluno out;
         Scanner sc = new Scanner(System.in);
-        String infoString, nome, email, regime;
+        String infoString, nome, email, regime = "Erro";
         String[] infoArray;
-        int numMecanografico, opcao, ano;
+        int numMecanografico = 0, opcao=0, ano = 0;
         Curso curso;
         String[] menuRegime = {"normal", "trabalhador-estudante", "atleta", "dirigente associativo","aluno de Erasmus"};
+        boolean repeat;
 
         while(true){
-            System.out.println("Para voltar ao menu principal envie uma resposta vazia");
+            repeat = false;
             System.out.print("Nome: ");
             nome = sc.nextLine();
-
-            if(nome.equals("")) {
-                return null;
-            }
 
             //Verificar nome valido
             for (char c : nome.toCharArray()) {
                 //Pode conter letras e espaços
                 if (!isLetter(c) && c != ' ') {
                     System.out.println("Nome invalido");
-                    continue;
+                    repeat = true;
                 }
             }
 
             //Passou todos os testes
-            break;
+           if(!repeat) {
+               break;
+           }
         }
 
         while(true) {
-            System.out.println("Para voltar ao menu principal envie uma resposta vazia");
+            repeat = false;
             System.out.print("Email: ");
             email = sc.nextLine();
-
-            if(email.equals("")) {
-                return null;
-            }
 
             infoArray = email.split("@");
 
             //So pode conter um @
             if(infoArray.length != 2) {
                 System.out.println("Email invalido");
+                repeat = true;
             }
 
             //Passou todos os testes
-            break;
+            if(!repeat) {
+                break;
+            }
         }
 
         while(true) {
-            System.out.println("Para voltar ao menu principal envie uma resposta vazia");
+            repeat=false;
             System.out.print("Numero Mecanografico: ");
 
             infoString = sc.nextLine();
-
-            if(email.equals("")) {
-                return null;
-            }
 
             try {
                 numMecanografico = Integer.parseInt(infoString);
             } catch (NumberFormatException e) {
                 System.out.println("Apenas podem ser inseridos numeros");
-                continue;
+                repeat = true;
+            }
+
+            if(!repeat) {
+                repeat = !numMecanograficoDisponivel(numMecanografico);
             }
 
             //Passou todos os testes
-            break;
-        }
-
-        while (true) {
-            System.out.println("Para voltar ao menu principal envie uma resposta vazia");
-            System.out.println(" uma regime:");
-            printMenu(menuRegime);
-
-            infoString = sc.nextLine();
-
-            if(infoString.equals("")) {
-                return null;
+            if(!repeat) {
+                break;
             }
-
-            try {
-                opcao = Integer.parseInt(infoString);
-            } catch (NumberFormatException e) {
-                System.out.println("Opcao invalida");
-                continue;
-            }
-
-            try {
-                regime = menuRegime[opcao];
-            } catch(IndexOutOfBoundsException e) {
-                System.out.println("Opcao invalida");
-                continue;
-            }
-
-            //Passou todos os testes
-            break;
-        }
-
-        while (true) {
-            System.out.println("Para voltar ao menu principal envie uma resposta vazia");
-            System.out.println("Curso: ");
-
-            curso = escolhaListaCursosComDisciplina(disciplina);
-
-            if(curso == null) {
-                continue;
-            }
-
-            //Passou todos os testes
-            break;
         }
 
         while(true) {
-            System.out.println("Para voltar ao menu principal envie uma resposta vazia");
+            repeat=false;
             System.out.print("Ano: ");
 
             infoString = sc.nextLine();
-
-            if(infoString.equals("")) {
-                return null;
-            }
 
             try{
                 ano = Integer.parseInt(infoString);
             } catch(NumberFormatException e) {
                 System.out.println("Insira um ano valido");
-                continue;
+                repeat=true;
             }
 
             //Passou todos os testes
-            break;
+            if(!repeat) {
+                break;
+            }
+        }
+
+        while (true) {
+            repeat = false;
+            System.out.println("Curso: \n");
+
+            curso = escolhaListaCursosComDisciplina(disciplina);
+
+            if(curso == null) {
+                repeat=true;
+            }
+
+            //Passou todos os testes
+            if(!repeat) {
+                break;
+            }
+        }
+
+        while (true) {
+            repeat = false;
+            System.out.println("Escolha um tipo de estudante:\n");
+            printMenu(menuRegime);
+
+            System.out.print("\nOpcao: ");
+
+            infoString = sc.nextLine();
+
+            try {
+                opcao = Integer.parseInt(infoString);
+            } catch (NumberFormatException e) {
+                System.out.println("Opcao invalida\n");
+                repeat=true;
+            }
+
+            if(!repeat) {
+                try {
+                    regime = menuRegime[opcao];
+                    if(opcao == 1 || opcao == 2 || opcao == 3 || curso.getDuracao() <= ano) {
+                        regime = "Especial";
+                    } else {
+                        regime = "Normal";
+                    }
+                } catch (IndexOutOfBoundsException e) {
+                    System.out.println("Opcao invalida\n");
+                    repeat = true;
+                }
+            }
+
+            //Passou todos os testes
+            if(!repeat) {
+                break;
+            }
         }
 
         out = new Aluno(nome, email, numMecanografico, curso, ano, regime);
@@ -888,29 +946,29 @@ public class Gestor {
         }
 
         for(Aluno aluno : alunos) {
-            System.out.println(aluno.toStringDetailed());
+            System.out.println("[" + i + "] " + aluno.toStringDetailed());
 
             ++i;
         }
 
         System.out.println("[" + i + "] Criar aluno");
-        System.out.print("Opcao: ");
+        System.out.print("\nOpcao: ");
 
         try {
             opcao = Integer.parseInt(sc.nextLine());
         } catch (NumberFormatException e) {
-            System.out.println("Opcao invalida");
+            System.out.println("Opcao invalida\n");
             return null;
         }
 
         try {
             return alunos.get(opcao);
-        } catch(ArrayIndexOutOfBoundsException e) {
+        } catch(IndexOutOfBoundsException e) {
             //ultima opcao
             if(opcao == alunos.size()) {
                 return criarAluno(disciplina);
             }
-            System.out.println("Opcao invalida");
+            System.out.println("Opcao invalida\n");
             return null;
         }
     }
@@ -1010,7 +1068,7 @@ public class Gestor {
         try {
             auxInt = Integer.parseInt(sc.nextLine());
         } catch (NumberFormatException e) {
-            System.out.println("Opcao invalida");
+            System.out.println("Opcao invalida\n");
             return 1;
         }
 
@@ -1025,7 +1083,7 @@ public class Gestor {
                 try {
                     auxInt = Integer.parseInt(sc.nextLine());
                 } catch (NumberFormatException e) {
-                    System.out.printf("Opcao invalida");
+                    System.out.printf("Opcao invalida\n");
                     return 1;
                 }
 
@@ -1078,7 +1136,7 @@ public class Gestor {
 
                     //Listar funcionarios de um exame
                     case 3:
-                        System.out.println("---Listar funcionarios de um exame---");
+                        System.out.println("---Listar funcionarios de um exame---\n");
 
                         if(examesDisponiveis()) {
                             auxExame = escolhaListaExames();
@@ -1110,7 +1168,7 @@ public class Gestor {
                         break;
                         
                     case 5:
-                        System.out.println("---Listar notas---");
+                        System.out.println("---Listar notas---\n");
 
                         if(examesDisponiveis()) {
                             auxExame = escolhaListaExames();
@@ -1128,7 +1186,7 @@ public class Gestor {
                         break;
 
                     default:
-                        System.out.println("Opcao invalida");
+                        System.out.println("Opcao invalida\n");
                         break;
                 }
                 break;
@@ -1137,7 +1195,7 @@ public class Gestor {
                 break;
             //Configurar exames
             case 2:
-                System.out.println("--- Configurar exame ---");
+                System.out.println("--- Configurar exame ---\n");
                 if(examesDisponiveis()) {
                     auxExame = escolhaListaExames();
                     if(auxExame != null) {
@@ -1148,14 +1206,14 @@ public class Gestor {
                         try {
                             auxInt = Integer.parseInt(sc.nextLine());
                         } catch (NumberFormatException e) {
-                            System.out.printf("Opcao invalida");
+                            System.out.printf("Opcao invalida\n");
                             break;
                         }
 
                         switch (auxInt) {
                             //Associar vigilante
                             case 0:
-                                System.out.println("--- Associar vigilante ---");
+                                System.out.println("--- Associar vigilante --\n-");
                                 //Escolher funcionario ou criar um
                                 auxFuncionario = escolhaFuncionarioDocenteListaPessoas();
                                 if(auxFuncionario != null) {
@@ -1169,7 +1227,7 @@ public class Gestor {
                                 break;
                             //Associar assistente
                             case 1:
-                                System.out.println("--- Associar assistente ---");
+                                System.out.println("--- Associar assistente ---\n");
                                 auxFuncionario = escolhaFuncionarioNaoDocenteListaPessoas();
                                 if(auxFuncionario != null) {
                                     auxExame.inserirAssistente((FuncionarioNaoDocente)auxFuncionario);
@@ -1181,7 +1239,7 @@ public class Gestor {
                                 break;
                             //Associar aluno
                             case 2:
-                                System.out.println("--- Associar aluno ---");
+                                System.out.println("--- Associar aluno ---\n");
                                 auxAluno = escolhaAlunoListaPessoas(auxExame.getDisciplina());
                                 if(auxAluno != null) {
                                     if(auxAluno.getCurso().getNome().equals("Nao existente")) {
@@ -1195,7 +1253,7 @@ public class Gestor {
 
                                 break;
                             default:
-                                System.out.printf("Opcao invalida");
+                                System.out.printf("Opcao invalida\n");
                                 break;
                         }
                     }
@@ -1220,7 +1278,7 @@ public class Gestor {
                 return 0;
             //Opcao invalida
             default:
-                System.out.println("Opcao invalida");
+                System.out.println("Opcao invalida\n");
                 break;
         }
         return 1;

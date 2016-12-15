@@ -1,5 +1,6 @@
 Curso 1|3|Licenciatura
 	Disciplina 1|1
 		Vigilante|2
+		ewr|12
 	Disciplina 2|1
 		Vigilante|2
