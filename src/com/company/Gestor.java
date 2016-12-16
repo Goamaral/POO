@@ -1,12 +1,9 @@
 package com.company;
 
 import java.io.*;
-import java.lang.reflect.Array;
 import java.util.*;
 
 import static java.lang.Character.isLetter;
-
-//TODO -> guardar salas
 
 public class Gestor {
     private static ArrayList<Exame> exames = new ArrayList<>();
@@ -14,55 +11,11 @@ public class Gestor {
     private static ArrayList<Curso> cursos = new ArrayList<>();
 	private static ArrayList<Sala> salas = new ArrayList<>();
     private ArrayList<String> historico = new ArrayList<>();
-    private String importFileName;
-    private String exportFileName;
-    private static String[] menuPrincipal = {"Listar", "Criar exames", "Configurar exames", "Lancar notas" , "Sair"};
+    private static String[] menuPrincipal = {"Listar", "Criar exames", "Configurar exames", "Lancar notas", "Sair"};
     private static String[] menuListar = {"Listar exames", "Listar alunos inscritos num exame", "Listar exames de um aluno", "Listar funcionarios de um exame", "Listar exames de um funcionario", "Listar notas"};
     private static String[] menuConfigurarExame = {"Editar vigilantes", "Editar assistentes", "Editar aluno"};
 
     public static void main(String[] args) {
-        /*FuncionarioDocente resp = new FuncionarioDocente("Responsavel", "responsavel@domain", 1, "assistente", "sistemas de informação");
-        pessoas.add(resp);
-        FuncionarioDocente vig = new FuncionarioDocente("Vigilante", "vigilante@domain", 2, "auxiliar", "comunicação e telemática");
-        pessoas.add(vig);
-        ArrayList<FuncionarioDocente> outrosDocentes = new ArrayList<>();
-        outrosDocentes.add(vig);
-
-        Disciplina d1 = new Disciplina("Disciplina 1", resp, outrosDocentes);
-        Disciplina d2 = new Disciplina("Disciplina 2", resp, outrosDocentes);
-
-        ArrayList<Disciplina> disciplinas = new ArrayList<>();
-        disciplinas.add(d1);
-        disciplinas.add(d2);
-
-        Sala s1 = new Sala("Sala1");
-		salas.add(s1);
-        Calendar date1 = Calendar.getInstance();
-        date1.set(2017, 0, 5, 10, 30);
-        Calendar date2 = Calendar.getInstance();
-        date2.set(2017, 0, 20, 14, 0);
-        Calendar date3 = Calendar.getInstance();
-        date3.set(2017, 1, 5, 17, 30);
-        IntervaloTempo t1 = new IntervaloTempo(date1, 30);
-        IntervaloTempo t2 = new IntervaloTempo(date2, 60);
-        IntervaloTempo t3 = new IntervaloTempo(date3, 60);
-
-        Exame en = new ExameNormalRecurso(d1, s1, resp, t1, "Normal");
-        exames.add(en);
-        Exame er = new ExameNormalRecurso(d1, s1, resp, t2, "Recurso");
-        exames.add(er);
-        Exame ee = new ExameEspecial(d1, s1, resp, t3);
-        exames.add(ee);
-
-        FuncionarioNaoDocente ass = new FuncionarioNaoDocente("Assistente", "assistente@domain", 3, "assistente operacional", "secretaria");
-        pessoas.add(ass);
-
-        Curso c1 = new Curso("Curso 1", 3, "Licenciatura", disciplinas);
-        cursos.add(c1);
-
-        Aluno a1 = new Aluno("Aluno 1", "aluno1@domain", 1000, c1, 1, "normal");
-        pessoas.add(a1);*/
-
         carregarDados();
 
         while(true) {
@@ -1192,11 +1145,9 @@ public class Gestor {
     }
 
 	//TODO -> criar curso
-	//TODO -> criar docente
 	//TODO -> criar nao docente
 	//Criar menu para a escolha de um docente da lista de Pessoas ou criar um, e devolver o docente
 	public static FuncionarioDocente escolhaListaDocentesPessoa(){
-		//TODO -> adicionar a funcionalidade de criar docente
 		int opcaoInteger;
 		Scanner scanner = new Scanner(System.in);
 		int i = 0;
@@ -1216,6 +1167,8 @@ public class Gestor {
 			i++;
 		}
 
+        System.out.println("[" + i + "] Criar docente");
+
 		System.out.print("\nOpcao: ");
 		try {
 			opcaoInteger = Integer.parseInt(scanner.nextLine());
@@ -1227,6 +1180,9 @@ public class Gestor {
 		try {
 			return docentes.get(opcaoInteger);
 		} catch (IndexOutOfBoundsException e) {
+            if(opcaoInteger == docentes.size()) {
+                return criarDocente();
+            }
 			System.out.println("Insira uma opcao valida");
 			return null;
 		}
@@ -1338,7 +1294,6 @@ public class Gestor {
             cursos = (ArrayList<Curso>) objectCursos.readObject();
         } catch (FileNotFoundException e) {
             System.out.println("Ficheiro cursos.db nao encontrado");
-            return;
         } catch (IOException e) {
             System.out.println("Erro na leitura do ficheiro cursos.db");
             return;
@@ -1354,7 +1309,6 @@ public class Gestor {
             pessoas = (ArrayList<Pessoa>) objectPessoas.readObject();
         } catch (FileNotFoundException e) {
             System.out.println("Ficheiro pessoas.db nao encontrado");
-            return;
         } catch (IOException e) {
             System.out.println("Erro na leitura do ficheiro pessoas.db");
             return;
@@ -1370,7 +1324,6 @@ public class Gestor {
             exames = (ArrayList<Exame>) objectExames.readObject();
         } catch (FileNotFoundException e) {
             System.out.println("Ficheiro exames.db nao encontrado");
-            return;
         } catch (IOException e) {
             System.out.println("Erro na leitura do ficheiro exames.db");
             return;
@@ -1386,7 +1339,6 @@ public class Gestor {
             salas = (ArrayList<Sala>) objectSalas.readObject();
         } catch (FileNotFoundException e) {
             System.out.println("Ficheiro salas.db nao encontrado");
-            return;
         } catch (IOException e) {
             System.out.println("Erro na leitura do ficheiro salas.db");
             return;
@@ -1599,7 +1551,7 @@ public class Gestor {
 						}
 					} while(repeat);
 
-					if (auxSala.inserirIntervalo(auxInicio, auxDuracao)){
+					if (!auxSala.inserirIntervalo(auxInicio, auxDuracao)){
 						System.out.println("Sala ja ocupada na hora selecionada. Escolha outra sala");
 						repeat2=true;
 					}

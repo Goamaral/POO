@@ -1,11 +1,12 @@
 package com.company;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 
 public class Sala implements java.io.Serializable {
 	private static final long serialVersionUID = 13L;
-    private ArrayList<IntervaloTempo> horasOcupadas;
+    private ArrayList<IntervaloTempo> horasOcupadas = new ArrayList<>();
     private String id;
 
     public String toString() {
@@ -35,6 +36,11 @@ public class Sala implements java.io.Serializable {
         IntervaloTempo intervalo = new IntervaloTempo(inicio, duracao);
         IntervaloTempo auxNext;
         int i = 0;
+
+        if(horasOcupadas.size() == 0) {
+            horasOcupadas.add(intervalo);
+            return true;
+        }
 
         for (IntervaloTempo aux : horasOcupadas) {
             //Inserir no inicio
