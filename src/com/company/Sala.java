@@ -1,7 +1,6 @@
 package com.company;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 
 public class Sala implements java.io.Serializable {
@@ -10,16 +9,6 @@ public class Sala implements java.io.Serializable {
     private String id;
 
     public String toString() {
-        StringBuilder out = new StringBuilder(id + "\n");
-
-        for (IntervaloTempo intervaloTempo : horasOcupadas) {
-            out.append("\t" + intervaloTempo.toString());
-        }
-
-        return out.toString();
-    }
-
-    public String toStringDetailed() {
         return getId();
     }
 
@@ -27,11 +16,6 @@ public class Sala implements java.io.Serializable {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    //TEST
     public boolean inserirIntervalo(Calendar inicio, int duracao) {
         IntervaloTempo intervalo = new IntervaloTempo(inicio, duracao);
         IntervaloTempo auxNext;
@@ -73,11 +57,6 @@ public class Sala implements java.io.Serializable {
             ++i;
         }
         return false;
-    }
-
-    public Sala(ArrayList<IntervaloTempo> horasOcupadas, String id) {
-        this.horasOcupadas = horasOcupadas;
-        this.id = id;
     }
 
     public Sala(String id) {

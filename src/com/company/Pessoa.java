@@ -1,13 +1,10 @@
 package com.company;
 
-public abstract class Pessoa implements java.io.Serializable {
+public class Pessoa implements java.io.Serializable {
 	private static final long serialVersionUID = 12L;
     private String nome;
     private String email;
 
-    public abstract String toString();
-
-    public Pessoa() {}
     public Pessoa(String nome, String email) {
 
         this.nome = nome;
@@ -18,15 +15,7 @@ public abstract class Pessoa implements java.io.Serializable {
         return nome;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
     public String getEmail() {
         return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 }

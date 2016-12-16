@@ -7,39 +7,12 @@ public class FuncionarioDocente extends Funcionario implements java.io.Serializa
     private String areaDeInvestigacao;
     private ArrayList<IntervaloTempo> docenteOcupado = new ArrayList<>();
 
-    public String toStringDetailed() {
+    public String toString() {
         return this.getNumMecanografico() +
                 " " + this.getNome() +
                 " Categoria: " + this.getCategoria() +
                 " Area: " + this.getAreaDeInvestigacao() +
                 " Email: " + this.getEmail();
-    }
-
-    public String toString() {
-        StringBuilder out = new StringBuilder(super.getNome() +
-                "»" + super.getEmail() +
-                "»" + super.getNumMecanografico() +
-                "»" + super.getCategoria() +
-                "»" + this.getAreaDeInvestigacao() +
-                "»" + "D" + "\n");
-
-        for(IntervaloTempo intervaloTempo : this.getDocenteOcupado()) {
-            out.append("\t" + intervaloTempo.toString() + "\n");
-        }
-
-        return out.toString();
-    }
-
-    public String toStringBasic() {
-        StringBuilder out = new StringBuilder("\t\t" + super.getNome() + "»"
-                + super.getNumMecanografico() +
-                "»" + this.getAreaDeInvestigacao()+ "\n");
-
-        for(IntervaloTempo intervaloTempo : this.getDocenteOcupado()) {
-            out.append("\t\t\t" + intervaloTempo.toString() + "\n");
-        }
-
-        return out.toString();
     }
 
     //PRIVATE METHODS
@@ -88,12 +61,6 @@ public class FuncionarioDocente extends Funcionario implements java.io.Serializa
 
 
     //CONSTRUCTOR
-    //DUMB CONSTRUCTOR
-    public FuncionarioDocente(String nome, String email, int numMecanografico, String categoria, String areaDeInvestigacao, ArrayList<IntervaloTempo> docenteOcupado) {
-        super(nome, email, numMecanografico, categoria);
-        this.setAreaDeInvestigacao(areaDeInvestigacao);
-        this.setDocenteOcupado(docenteOcupado);
-    }
     //NORMAL CONSTRUCTOR
     public FuncionarioDocente(String nome, String email, int numMecanografico, String categoria, String areaDeInvestigacao) {
         super(nome, email, numMecanografico, categoria);
@@ -112,9 +79,5 @@ public class FuncionarioDocente extends Funcionario implements java.io.Serializa
 
     public ArrayList<IntervaloTempo> getDocenteOcupado() {
         return docenteOcupado;
-    }
-
-    public void setDocenteOcupado(ArrayList<IntervaloTempo> docenteOcupado) {
-        this.docenteOcupado = docenteOcupado;
     }
 }

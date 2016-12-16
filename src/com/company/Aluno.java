@@ -11,10 +11,6 @@ public class Aluno extends Pessoa implements java.io.Serializable {
     private String regime;
 
     public String toString() {
-        return super.getNome() + "»" + getEmail() + "»" + numAluno + "»" + ano + "»" + regime + "»" + "A" + "\n";
-    }
-
-    public String toStringDetailed() {
         return this.getNumAluno() +
                 " " + this.getNome() +
                 " ano: " + this.getAno() +
@@ -26,7 +22,7 @@ public class Aluno extends Pessoa implements java.io.Serializable {
         for(Exame exame : exames) {
             for(InscritoExame inscritoExame : exame.getResultados()) {
                 if(inscritoExame.getAluno().equals(this)) {
-                    System.out.println(exame.toStringDetailed());
+                    System.out.println(exame.toString());
                 }
             }
         }
@@ -54,19 +50,5 @@ public class Aluno extends Pessoa implements java.io.Serializable {
     }
     public String getRegime() {
         return regime;
-    }
-
-    //SETS
-    public void setNumAluno(int numAluno) {
-        this.numAluno = numAluno;
-    }
-    public void setCurso(Curso curso) {
-        this.curso = curso;
-    }
-    public void setAno(int ano) {
-        this.ano = ano;
-    }
-    public void setRegime(String regime) {
-        this.regime = regime;
     }
 }

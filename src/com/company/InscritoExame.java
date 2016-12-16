@@ -25,16 +25,11 @@ public class InscritoExame implements java.io.Serializable {
 
     public void setNota(double nota) {
 		DecimalFormat df = new DecimalFormat("#.00");
-        this.nota = df.format(nota).toString();
-    }
-
-    public InscritoExame(Aluno aluno, double nota) {
-        this.aluno = aluno;
-        this.nota = Double.toString(nota);
+        this.nota = df.format(nota);
     }
 
     public InscritoExame(Aluno aluno) {
         this.aluno = aluno;
-        this.nota = new String("Nota nao lançada");
+        this.nota = "Nota nao lançada";
     }
 }

@@ -17,8 +17,6 @@ public abstract class Exame implements java.io.Serializable {
 	private boolean notasLancadas = false;
 
     //PUBLIC METHODS
-    public abstract String toString();
-
     public void listarNotas() {
         if(this.getResultados().size() == 0) {
             System.out.println("Nao existem alunos inscritos");
@@ -30,7 +28,7 @@ public abstract class Exame implements java.io.Serializable {
         }
     }
 
-    public String toStringDetailed() {
+    public String toString() {
         return this.getEpoca() +
                 " " + this.getDisciplina().getNome() +
                 " " + this.getData().toString() +
@@ -42,48 +40,46 @@ public abstract class Exame implements java.io.Serializable {
     //TEST
     public boolean verificarAlunoInscritoDisciplina(Aluno aluno, Disciplina disciplina) {
         //Verificar se aluno esta inscrito
-        if(disciplina.getAlunosInscritos().contains(aluno) ) {
-            return true;
-        } else return false;
+        return disciplina.getAlunosInscritos().contains(aluno);
     }
 
     //TEST
     public void lancarNotas() {
-		if(this.notasLancadas == true) {
-			System.out.println("Notas ja lancadas");
-			return;
-		}
+        if (!this.notasLancadas) {
 
-        Random r = new Random();
+            Random r = new Random();
 
-        if( vigilantes.size()==0 ) {
-			System.out.println("Nao existem vigilantes associados a este exame");
-			return;
-		}
+            if (vigilantes.size() == 0) {
+                System.out.println("Nao existem vigilantes associados a este exame");
+                return;
+            }
 
-		if( assistentes.size()==0 ) {
-			System.out.println("Nao existem assistentes associados a este exame");
-			return;
-		}
+            if (assistentes.size() == 0) {
+                System.out.println("Nao existem assistentes associados a este exame");
+                return;
+            }
 
-        if( resultados.size()==0 ) {
-            System.out.println("Nao existem alunos inscritos neste exame");
-            return;
+            if (resultados.size() == 0) {
+                System.out.println("Nao existem alunos inscritos neste exame");
+                return;
+            }
+
+            for (InscritoExame inscrito : resultados) {
+                inscrito.setNota((int) (20 * r.nextDouble()));
+            }
+
+            notasLancadas = true;
+
+            System.out.println("Notas lancadas");
+        } else {
+            System.out.println("Notas ja lancadas");
         }
-
-        for(InscritoExame inscrito : resultados) {
-            inscrito.setNota((int)(20 * r.nextDouble()));
-        }
-
-		notasLancadas=true;
-
-		System.out.println("Notas lancadas");
     }
 
     //TEST
     public void listarFuncionarios() {
         System.out.println("Responsavel:");
-        System.out.println("\t" + this.getDocenteResponsavel().toStringDetailed());
+        System.out.println("\t" + this.getDocenteResponsavel().toString());
 
         System.out.println("");
 
@@ -94,7 +90,7 @@ public abstract class Exame implements java.io.Serializable {
         }
 
         for(FuncionarioDocente funcionarioDocente: this.getVigilantes()) {
-            System.out.println("\t" + funcionarioDocente.toStringDetailed());
+            System.out.println("\t" + funcionarioDocente.toString());
         }
 
         System.out.println("");
@@ -106,7 +102,7 @@ public abstract class Exame implements java.io.Serializable {
         }
 
         for(FuncionarioNaoDocente funcionarioNaoDocente: this.getAssistentes()) {
-            System.out.println("\t" + funcionarioNaoDocente.toStringDetailed());
+            System.out.println("\t" + funcionarioNaoDocente.toString());
         }
 
         System.out.println("");

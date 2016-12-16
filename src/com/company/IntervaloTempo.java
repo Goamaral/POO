@@ -29,18 +29,7 @@ public class IntervaloTempo implements java.io.Serializable {
     //TEST
     private void setFim() {
         fim = (Calendar)inicio.clone();
-        fim.add(inicio.MINUTE, duracao);
-    }
-
-    //SETS
-    public void setInicio(Calendar inicio) {
-        this.inicio = inicio;
-    }
-    public void setFim(Calendar fim) {
-        this.fim = fim;
-    }
-    public void setDuracao(int duracao) {
-        this.duracao = duracao;
+        fim.add(Calendar.MINUTE, duracao);
     }
 
     //GETS

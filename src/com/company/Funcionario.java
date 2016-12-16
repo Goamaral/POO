@@ -8,9 +8,7 @@ public abstract class Funcionario extends Pessoa implements java.io.Serializable
     private String categoria;
 
     //PUBLIC METHODS
-    public abstract String toStringBasic();
     public abstract String toString();
-    public abstract String toStringDetailed();
 
     public void listarExames(ArrayList<Exame> exames) {
         for(Exame exame : exames) {
@@ -18,14 +16,12 @@ public abstract class Funcionario extends Pessoa implements java.io.Serializable
                     exame.getVigilantes().contains(this) ||
                     exame.getAssistentes().contains(this))
             {
-                System.out.println(exame.toStringDetailed());
+                System.out.println(exame.toString());
             }
         }
     }
 
     //CONSTRUCTOR
-    //EMPTY CONSTRUCTOR
-    public Funcionario() {}
     //NORMAL CONSTRUCTOR
     public Funcionario(String nome, String email, int numMecanografico, String categoria) {
         super(nome, email);
@@ -39,13 +35,5 @@ public abstract class Funcionario extends Pessoa implements java.io.Serializable
     }
     public String getCategoria() {
         return categoria;
-    }
-
-    //SETS
-    public void setNumMecanografico(int numMecanografico) {
-        this.numMecanografico = numMecanografico;
-    }
-    public void setCategoria(String categoria) {
-        this.categoria = categoria;
     }
 }

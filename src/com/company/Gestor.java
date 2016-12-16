@@ -10,12 +10,16 @@ public class Gestor {
     private static ArrayList<Pessoa> pessoas = new ArrayList<>();
     private static ArrayList<Curso> cursos = new ArrayList<>();
 	private static ArrayList<Sala> salas = new ArrayList<>();
-    private ArrayList<String> historico = new ArrayList<>();
+    private static ArrayList<String> historico = new ArrayList<>();
     private static String[] menuPrincipal = {"Listar", "Criar exames", "Configurar exames", "Lancar notas", "Sair"};
     private static String[] menuListar = {"Listar exames", "Listar alunos inscritos num exame", "Listar exames de um aluno", "Listar funcionarios de um exame", "Listar exames de um funcionario", "Listar notas"};
     private static String[] menuConfigurarExame = {"Editar vigilantes", "Editar assistentes", "Editar aluno"};
 
     public static void main(String[] args) {
+        boolean repeat;
+        Scanner scanner = new Scanner(System.in);
+        String opcao;
+
         carregarDados();
 
         while(true) {
@@ -26,6 +30,24 @@ public class Gestor {
 
         guardarDados();
 
+        do {
+            System.out.println("Quer guardar o historico? (s/n)");
+            opcao = scanner.nextLine();
+            switch (opcao) {
+                case "s":
+                    guardarHistorico();
+                    repeat = false;
+                    break;
+                case "n":
+                    repeat = false;
+                    break;
+                default:
+                    System.out.println("Opcao invalida");
+                    repeat = true;
+                    break;
+            }
+        } while (repeat);
+
         sair();
     }
 
@@ -33,7 +55,7 @@ public class Gestor {
     private static void listarExames() {
         //Imprimir exames
         for (Exame exame : exames) {
-            System.out.println(exame.toStringDetailed());
+            System.out.println(exame.toString());
         }
 
         System.out.println("");
@@ -49,7 +71,7 @@ public class Gestor {
 
         //Imprimir exames
         for (Exame exame : exames) {
-            System.out.printf("[%d] %s\n", i, exame.toStringDetailed());
+            System.out.printf("[%d] %s\n", i, exame.toString());
             ++i;
         }
 
@@ -99,7 +121,7 @@ public class Gestor {
         }
 
         for(Aluno aluno : alunos) {
-            System.out.println("[" + i + "] " + aluno.toStringDetailed());
+            System.out.println("[" + i + "] " + aluno.toString());
             ++i;
         }
 
@@ -167,11 +189,11 @@ public class Gestor {
 
         for(Funcionario funcionario : funcionarios) {
             if(funcionario instanceof FuncionarioDocente) {
-                System.out.println("[" + i + "] " + funcionario.toStringDetailed());
+                System.out.println("[" + i + "] " + funcionario.toString());
             }
 
             if(funcionario instanceof FuncionarioNaoDocente) {
-                System.out.println("[" + i + "] " + funcionario.toStringDetailed());
+                System.out.println("[" + i + "] " + funcionario.toString());
             }
             ++i;
         }
@@ -379,49 +401,6 @@ public class Gestor {
         return out;
     }
 
-    //Criar menu de escolha com a lista de todos os objectos do tipo FuncionarioDocente na lista de pessoas e devolver o FuncionarioDocente escolhido
-    private static FuncionarioDocente escolhaFuncionarioDocenteListaPessoas() {
-        Scanner sc = new Scanner(System.in);
-        int i = 0;
-        int opcao;
-        ArrayList<FuncionarioDocente> funcionarioDocentes = getDocentesPessoas();
-
-        if(funcionarioDocentes == null) {
-            return null;
-        }
-
-        for(FuncionarioDocente funcionarioDocente : funcionarioDocentes) {
-                System.out.println("[" + i + "] " + funcionarioDocente.getNumMecanografico() + " "
-                        + funcionarioDocente.getNome() + " "
-                        + funcionarioDocente.getCategoria() + " "
-                        + funcionarioDocente.getAreaDeInvestigacao() + " "
-                        + funcionarioDocente.getEmail());
-
-                ++i;
-        }
-
-        System.out.println("[" + i + "] Criar docente");
-        System.out.print("\nOpcao: ");
-
-        try {
-            opcao = Integer.parseInt(sc.nextLine());
-        } catch (NumberFormatException e) {
-            System.out.println("Opcao invalida");
-            return null;
-        }
-
-        try {
-            return funcionarioDocentes.get(opcao);
-        } catch(IndexOutOfBoundsException e) {
-            //ultima opcao
-            if(opcao == funcionarioDocentes.size()) {
-                return criarDocente();
-            }
-            System.out.println("Opcao invalida");
-            return null;
-        }
-    }
-
     //Devolver todos os funcionarios nao docentes em pessoas
     private static ArrayList<FuncionarioNaoDocente> getFuncionarioNaoDocentePessoas() {
         ArrayList<FuncionarioNaoDocente> out = new ArrayList<>();
@@ -598,7 +577,7 @@ public class Gestor {
         }
 
         for(FuncionarioNaoDocente funcionarioNaoDocente : funcionarioNaoDocentes) {
-            System.out.println("[" + i + "] " + funcionarioNaoDocente.toStringDetailed());
+            System.out.println("[" + i + "] " + funcionarioNaoDocente.toString());
 
             ++i;
         }
@@ -666,12 +645,16 @@ public class Gestor {
         Scanner scanner = new Scanner(System.in);
         ArrayList<Curso> cursos = getCursosComDisciplina(disciplina);
 
+        if(cursos==null) {
+            cursos = new ArrayList<>();
+        }
+
         if(cursos.size() == 0) {
             return new Curso();
         }
 
         for(Curso curso : cursos) {
-            System.out.println("[" + i + "] " + curso.toStringDetailed());
+            System.out.println("[" + i + "] " + curso.toString());
             ++i;
         }
 
@@ -864,7 +847,7 @@ public class Gestor {
         }
 
         for(Aluno aluno : alunos) {
-            System.out.println("[" + i + "] " + aluno.toStringDetailed());
+            System.out.println("[" + i + "] " + aluno.toString());
 
             ++i;
         }
@@ -892,15 +875,12 @@ public class Gestor {
     }
 
 	//Verificar se os cursos estão disponiveis
-	public static boolean cursosDisponiveis(){
-        if (cursos.size() == 0) {
-			return false;
-		}
-        return true;
+	private static boolean cursosDisponiveis(){
+        return cursos.size() != 0;
     }
 
 	//Obter disciplinas, nao repetidas de todos os cursos
-	public static ArrayList<Disciplina> getDisciplinasCursos(){
+	private static ArrayList<Disciplina> getDisciplinasCursos(){
 		ArrayList<Disciplina> out = new ArrayList<>();
 
 		for(Curso curso : cursos){
@@ -919,7 +899,7 @@ public class Gestor {
 	}
 
 	//Criar menu de escolha de uma disciplina e devolver disciplina escolhida
-	public static Disciplina escolhaListaDisciplinas(ArrayList<Disciplina> disciplinas){
+	private static Disciplina escolhaListaDisciplinas(ArrayList<Disciplina> disciplinas){
         int i = 0;
         int opcaoInteger;
         Scanner scanner = new Scanner(System.in);
@@ -927,7 +907,7 @@ public class Gestor {
 		System.out.println("Escolha uma disciplina:\n");
 
         for (Disciplina disciplina : disciplinas){
-            System.out.println("[" + i + "] " + disciplina.toStringDetailed());
+            System.out.println("[" + i + "] " + disciplina.toString());
             i++;
         }
 
@@ -949,7 +929,7 @@ public class Gestor {
     }
 
 	//Criar menu de escolha de uma sala ou criar uma nova sala e devolver a sala escolhida
-	public static Sala escolhaListaSalas(){
+	private static Sala escolhaListaSalas(){
 		int i = 0;
 		int opcaoInteger;
 		Scanner scanner = new Scanner(System.in);
@@ -957,7 +937,7 @@ public class Gestor {
 		System.out.println("Escolha uma sala:\n");
 
 		for (Sala sala : salas){
-			System.out.println("[" + i + "] " + sala.toStringDetailed());
+			System.out.println("[" + i + "] " + sala.toString());
 			++i;
 		}
 
@@ -984,7 +964,7 @@ public class Gestor {
 	}
 
 	//Criar menu para a criacao de uma sala
-	public static Sala criarSala(){
+	private static Sala criarSala(){
         String id;
         Sala out;
         Scanner scanner = new Scanner(System.in);
@@ -1005,7 +985,7 @@ public class Gestor {
     }
 
 	//Criar menu para criar objecto intervalo de tempo para a criacao de um exame
-	public static Calendar criarInicioExame(){
+	private static Calendar criarInicioExame(){
         Calendar out = Calendar.getInstance();
         Calendar now = Calendar.getInstance();
         String stringRecebida;
@@ -1145,9 +1125,8 @@ public class Gestor {
     }
 
 	//TODO -> criar curso
-	//TODO -> criar nao docente
 	//Criar menu para a escolha de um docente da lista de Pessoas ou criar um, e devolver o docente
-	public static FuncionarioDocente escolhaListaDocentesPessoa(){
+	private static FuncionarioDocente escolhaListaDocentesPessoa(){
 		int opcaoInteger;
 		Scanner scanner = new Scanner(System.in);
 		int i = 0;
@@ -1155,19 +1134,19 @@ public class Gestor {
 		//carregar todos os funcionarios para a lista funcionarios
 		ArrayList<FuncionarioDocente> docentes = getDocentesPessoas();
 
-        if(docentes == null) {
-            return null;
-        }
-
 		System.out.println("Escolha um docente:\n");
 
-		//imprimir a lista de funcionarios docentes obtida
-		for (FuncionarioDocente funcionarioDocente : docentes){
-			System.out.println("[" + i + "] " + funcionarioDocente.toStringDetailed());
-			i++;
-		}
+        if(docentes == null) {
+            docentes = new ArrayList<>();
+        }
 
-        System.out.println("[" + i + "] Criar docente");
+        //imprimir a lista de funcionarios docentes obtida
+        for (FuncionarioDocente funcionarioDocente : docentes){
+            System.out.println("[" + i + "] " + funcionarioDocente.toString());
+            i++;
+        }
+
+        System.out.printf("[%d] Criar docente\n", i);
 
 		System.out.print("\nOpcao: ");
 		try {
@@ -1282,8 +1261,17 @@ public class Gestor {
 		System.out.println("Dados gravados com sucessso");
     }
 
-    public void guardarHistorico() {
-
+    private static void guardarHistorico() {
+        //Guardar historico
+        try {
+            PrintWriter writer = new PrintWriter("historico.txt");
+            for(String string : historico) {
+                writer.println(string);
+            }
+            writer.close();
+        } catch (IOException e) {
+            System.out.println("Erro na escrita do historico cursos.db");
+        }
     }
 
     private static void carregarDados() {
@@ -1341,10 +1329,8 @@ public class Gestor {
             System.out.println("Ficheiro salas.db nao encontrado");
         } catch (IOException e) {
             System.out.println("Erro na leitura do ficheiro salas.db");
-            return;
         } catch (ClassNotFoundException e) {
             System.out.println("Classe Sala nao encontrada");
-            return;
         }
     }
 
@@ -1398,6 +1384,7 @@ public class Gestor {
                 switch (auxInt) {
                     //Listar exames
                     case 0:
+                        historico.add("Listar Exames");
                         System.out.println("\n--- Listar Exames ---\n");
                         if(examesDisponiveis()){
                             listarExames();
@@ -1416,6 +1403,7 @@ public class Gestor {
                             auxExame = escolhaListaExames();
 
                             if(auxExame != null) {
+                                historico.add("Listar alunos inscritos no exame " + auxExame.toString());
                                 auxExame.listarAlunosInscritos();
                             }
                         }
@@ -1433,7 +1421,8 @@ public class Gestor {
                             auxAluno = escolhaListaAlunosInscritosExame();
 
                             if(auxAluno != null) {
-								System.out.println("Exames\n:");
+                                historico.add("Listar exames do aluno " + auxAluno.toString());
+                                System.out.println("Exames\n:");
                                 auxAluno.listarExames(exames);
                             }
                         }
@@ -1451,6 +1440,7 @@ public class Gestor {
                             auxExame = escolhaListaExames();
 
                             if(auxExame != null) {
+                                historico.add("Listar funcionarios do exame " + auxExame.toString());
                                 auxExame.listarFuncionarios();
                             }
                         }
@@ -1467,6 +1457,7 @@ public class Gestor {
                             auxFuncionario = escolhaListaFuncionarios();
 
                             if(auxFuncionario != null) {
+                                historico.add("Listar exames do funcionario " + auxFuncionario.toString());
                                 auxFuncionario.listarExames(exames);
                             }
                         }
@@ -1482,6 +1473,7 @@ public class Gestor {
                         if(examesDisponiveis()) {
                             auxExame = escolhaListaExames();
                             if(auxExame != null) {
+                                historico.add("Listar notas do exame " + auxExame.toString());
                                 auxExame.listarNotas();
                             }
                         }
@@ -1518,7 +1510,7 @@ public class Gestor {
 					auxDisciplina = escolhaListaDisciplinas(auxDisciplinas);
 
 					if(auxDisciplina == null) {
-						repeat = true;;
+						repeat = true;
 					}
 				} while(repeat);
 
@@ -1527,7 +1519,7 @@ public class Gestor {
 					auxInicio = criarInicioExame();
 
 					if(auxInicio == null) {
-						repeat = true;;
+						repeat = true;
 					}
 				} while(repeat);
 
@@ -1547,7 +1539,7 @@ public class Gestor {
 						auxSala = escolhaListaSalas();
 
 						if(auxSala == null) {
-							repeat = true;;
+							repeat = true;
 						}
 					} while(repeat);
 
@@ -1602,11 +1594,10 @@ public class Gestor {
                         switch (auxInt) {
                             //Associar vigilante
                             case 0:
-                                System.out.println("--- Associar vigilante --\n-");
+                                System.out.println("--- Associar vigilante --\n");
                                 //Escolher funcionario ou criar um
-                                auxFuncionario = escolhaFuncionarioDocenteListaPessoas();
+                                auxFuncionario = escolhaListaDocentesPessoa();
                                 if(auxFuncionario != null) {
-                                    //Se conseg
                                     auxExame.inserirDocente((FuncionarioDocente)auxFuncionario);
                                 }
 
