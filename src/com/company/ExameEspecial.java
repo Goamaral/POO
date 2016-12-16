@@ -1,6 +1,7 @@
 package com.company;
 
-public class ExameEspecial extends Exame {
+public class ExameEspecial extends Exame implements java.io.Serializable {
+	private static final long serialVersionUID = 5L;
     public String toString(){
         StringBuilder out = new StringBuilder(super.getDisciplina().getNome().toString() +
                 "»" + super.getData().toString() +

@@ -3,7 +3,8 @@ package com.company;
 import java.util.ArrayList;
 
 
-public class Aluno extends Pessoa {
+public class Aluno extends Pessoa implements java.io.Serializable {
+	private static final long serialVersionUID = 1L;
     private int numAluno;
     private Curso curso;
     private int ano;
@@ -25,7 +26,7 @@ public class Aluno extends Pessoa {
         for(Exame exame : exames) {
             for(InscritoExame inscritoExame : exame.getResultados()) {
                 if(inscritoExame.getAluno().equals(this)) {
-                    System.out.printf(exame.toStringDetailed());
+                    System.out.println(exame.toStringDetailed());
                 }
             }
         }

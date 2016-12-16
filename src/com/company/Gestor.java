@@ -12,6 +12,7 @@ public class Gestor {
     private static ArrayList<Exame> exames = new ArrayList<>();
     private static ArrayList<Pessoa> pessoas = new ArrayList<>();
     private static ArrayList<Curso> cursos = new ArrayList<>();
+	private static ArrayList<Sala> salas = new ArrayList<>();
     private ArrayList<String> historico = new ArrayList<>();
     private String importFileName;
     private String exportFileName;
@@ -20,7 +21,7 @@ public class Gestor {
     private static String[] menuConfigurarExame = {"Editar vigilantes", "Editar assistentes", "Editar aluno"};
 
     public static void main(String[] args) {
-        FuncionarioDocente resp = new FuncionarioDocente("Responsavel", "responsavel@domain", 1, "assistente", "sistemas de informação");
+        /*FuncionarioDocente resp = new FuncionarioDocente("Responsavel", "responsavel@domain", 1, "assistente", "sistemas de informação");
         pessoas.add(resp);
         FuncionarioDocente vig = new FuncionarioDocente("Vigilante", "vigilante@domain", 2, "auxiliar", "comunicação e telemática");
         pessoas.add(vig);
@@ -35,6 +36,7 @@ public class Gestor {
         disciplinas.add(d2);
 
         Sala s1 = new Sala("Sala1");
+		salas.add(s1);
         Calendar date1 = Calendar.getInstance();
         date1.set(2017, 0, 5, 10, 30);
         Calendar date2 = Calendar.getInstance();
@@ -59,13 +61,9 @@ public class Gestor {
         cursos.add(c1);
 
         Aluno a1 = new Aluno("Aluno 1", "aluno1@domain", 1000, c1, 1, "normal");
-        pessoas.add(a1);
+        pessoas.add(a1);*/
 
-        try {
-            carregarDados();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        carregarDados();
 
         while(true) {
             if(menu() == 0) {
@@ -73,11 +71,7 @@ public class Gestor {
             }
         }
 
-        try {
-            guardarDados();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        guardarDados();
 
         sair();
     }
@@ -97,6 +91,8 @@ public class Gestor {
         int i = 0;
         int opcaoInteger;
         Scanner scanner = new Scanner(System.in);
+
+		System.out.println("Escolha um exame:\n");
 
         //Imprimir exames
         for (Exame exame : exames) {
@@ -150,15 +146,11 @@ public class Gestor {
         }
 
         for(Aluno aluno : alunos) {
-            System.out.println("[" + i + "]" + aluno.getNumAluno() +
-                    " " + aluno.getNome() +
-                    " ano: " + aluno.getAno() +
-                    " curso: " + aluno.getCurso().getNome() +
-                    " regime: " + aluno.getRegime());
+            System.out.println("[" + i + "] " + aluno.toStringDetailed());
             ++i;
         }
 
-        System.out.print("Opcao: ");
+        System.out.print("\nOpcao: ");
         try {
             opcaoInteger = Integer.parseInt(scanner.nextLine());
         } catch (NumberFormatException e) {
@@ -300,13 +292,8 @@ public class Gestor {
 
         while(true){
             repeat = false;
-            System.out.println("Para voltar ao menu principal envie uma resposta vazia");
             System.out.print("Nome: ");
             nome = sc.nextLine();
-
-            if(nome.equals("")) {
-                return null;
-            }
 
             //Verificar nome valido
             for (char c : nome.toCharArray()) {
@@ -325,13 +312,8 @@ public class Gestor {
 
         while(true) {
             repeat = false;
-            System.out.println("Para voltar ao menu principal envie uma resposta vazia");
             System.out.print("Email: ");
             email = sc.nextLine();
-
-            if(email.equals("")) {
-                return null;
-            }
 
             infoArray = email.split("@");
 
@@ -349,14 +331,9 @@ public class Gestor {
 
         while(true) {
             repeat = false;
-            System.out.println("Para voltar ao menu principal envie uma resposta vazia");
             System.out.print("Numero Mecanografico: ");
 
             infoString = sc.nextLine();
-
-            if(email.equals("")) {
-                return null;
-            }
 
             try {
                 numMecanografico = Integer.parseInt(infoString);
@@ -378,17 +355,12 @@ public class Gestor {
 
         while (true) {
             repeat = false;
-            System.out.println("Para voltar ao menu principal envie uma resposta vazia");
             System.out.println("Escolha uma categoria:");
             printMenu(menuCategoria);
 
             System.out.print("\nOpcao: ");
 
             infoString = sc.nextLine();
-
-            if(infoString.equals("")) {
-                return null;
-            }
 
             try {
                 opcao = Integer.parseInt(infoString);
@@ -414,17 +386,12 @@ public class Gestor {
 
         while(true) {
             repeat = false;
-            System.out.println("Para voltar ao menu principal envie uma resposta vazia");
             System.out.println("Escolha uma area de investigacao:");
             printMenu(menuAreaInvestigacao);
 
             System.out.print("\nOpcao: ");
 
             infoString = sc.nextLine();
-
-            if(infoString.equals("")) {
-                return null;
-            }
 
             try {
                 opcao = Integer.parseInt(infoString);
@@ -447,7 +414,6 @@ public class Gestor {
                 break;
             }
         }
-
 
         out = new FuncionarioDocente(nome, email, numMecanografico, categoria, areaDeInvestigacao);
 
@@ -482,7 +448,7 @@ public class Gestor {
         }
 
         System.out.println("[" + i + "] Criar docente");
-        System.out.print("Opcao: ");
+        System.out.print("\nOpcao: ");
 
         try {
             opcao = Integer.parseInt(sc.nextLine());
@@ -933,7 +899,7 @@ public class Gestor {
         return out;
     }
 
-    //Criar menu de escoha com lista de todos os alunos em pessoas e devolver alunoescolhido
+    //Criar menu de escoha com lista de todos os alunos em pessoas e devolver aluno escolhido
     private static Aluno escolhaAlunoListaPessoas(Disciplina disciplina) {
         Scanner sc = new Scanner(System.in);
         int i = 0;
@@ -972,248 +938,462 @@ public class Gestor {
         }
     }
 
+	//Verificar se os cursos estão disponiveis
+	public static boolean cursosDisponiveis(){
+        if (cursos.size() == 0) {
+			return false;
+		}
+        return true;
+    }
+
+	//Obter disciplinas, nao repetidas de todos os cursos
+	public static ArrayList<Disciplina> getDisciplinasCursos(){
+		ArrayList<Disciplina> out = new ArrayList<>();
+
+		for(Curso curso : cursos){
+			for (Disciplina disciplina : curso.getDisciplinas()){
+				if(!out.contains(disciplina)){
+					out.add(disciplina);
+				}
+			}
+		}
+
+		if(out.size() == 0) {
+			return null;
+		}
+
+		return out;
+	}
+
+	//Criar menu de escolha de uma disciplina e devolver disciplina escolhida
+	public static Disciplina escolhaListaDisciplinas(ArrayList<Disciplina> disciplinas){
+        int i = 0;
+        int opcaoInteger;
+        Scanner scanner = new Scanner(System.in);
+
+		System.out.println("Escolha uma disciplina:\n");
+
+        for (Disciplina disciplina : disciplinas){
+            System.out.println("[" + i + "] " + disciplina.toStringDetailed());
+            i++;
+        }
+
+        System.out.print("\nOpcao: ");
+
+        try {
+            opcaoInteger = Integer.parseInt(scanner.nextLine());
+        } catch (NumberFormatException e) {
+            System.out.println("Opcao invalida");
+            return null;
+        }
+
+        try{
+            return disciplinas.get(opcaoInteger);
+        }catch(IndexOutOfBoundsException e){
+            System.out.println("Opcao invalida");
+            return null;
+        }
+    }
+
+	//Criar menu de escolha de uma sala ou criar uma nova sala e devolver a sala escolhida
+	public static Sala escolhaListaSalas(){
+		int i = 0;
+		int opcaoInteger;
+		Scanner scanner = new Scanner(System.in);
+
+		System.out.println("Escolha uma sala:\n");
+
+		for (Sala sala : salas){
+			System.out.println("[" + i + "] " + sala.toStringDetailed());
+			++i;
+		}
+
+		System.out.println("[" + i + "] Criar sala");
+
+		System.out.print("\nOpcao: ");
+
+		try {
+			opcaoInteger = Integer.parseInt(scanner.nextLine());
+		} catch (NumberFormatException e) {
+			System.out.println("Insira uma opcao valida");
+			return null;
+		}
+
+		try{
+			return salas.get(opcaoInteger);
+		}catch(IndexOutOfBoundsException e){
+			if (opcaoInteger == salas.size()){
+				return criarSala();
+			}
+			System.out.println("Insira uma opcao valida");
+			return null;
+		}
+	}
+
+	//Criar menu para a criacao de uma sala
+	public static Sala criarSala(){
+        String id;
+        Sala out;
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Nome da sala: ");
+        id = scanner.nextLine();
+
+        out = new Sala(id);
+
+        if (salas.contains(out)){
+            System.out.println("Sala ja existente");
+            return out;
+        }
+
+        salas.add(out);
+
+        return out;
+    }
+
+	//Criar menu para criar objecto intervalo de tempo para a criacao de um exame
+	public static Calendar criarInicioExame(){
+        Calendar out = Calendar.getInstance();
+        Calendar now = Calendar.getInstance();
+        String stringRecebida;
+        String []parts;
+        Scanner scanner = new Scanner(System.in);
+        int ano, mes, dia, hora, minuto;
+        boolean anoBisexto = false;
+
+        int []meses31 = {1, 3, 5, 7, 8, 10, 12};
+        int []meses30 = {4, 6, 9, 11};
+
+        System.out.println("Formato da data <dia> <mes> <ano> <hora>:<minutos>");
+		System.out.print("Data: ");
+        stringRecebida = scanner.nextLine();
+
+        parts = stringRecebida.split(" ");
+
+        if(parts.length != 4) {
+            System.out.println("Formato de data invalido");
+            return null;
+        }
+
+        //Verificar ano
+        try {
+            ano = Integer.parseInt(parts[2]);
+        } catch(NumberFormatException e) {
+            System.out.println("Ano inserido invalido");
+            return null;
+        }
+
+        //Verificar se é bisexto
+        if(ano%4==0) {
+            if( !(ano%100==0 && ano%400!=0) ) {
+                anoBisexto = true;
+            }
+        }
+
+        //Verificar mes
+        try {
+            mes = Integer.parseInt(parts[1]);
+        } catch(NumberFormatException e) {
+            System.out.println("Mes inserido invalido");
+            return null;
+        }
+
+        //Verificar se é menor ou igual a 12
+        if(mes > 12) {
+            System.out.println("Mes inserido invalido");
+            return null;
+        }
+
+		//No objecto Calendar 0 é Janeiro
+		mes = mes - 1;
+
+        //Verificar dia
+        try {
+            dia = Integer.parseInt(parts[0]);
+        } catch(NumberFormatException e) {
+            System.out.println("Dia inserido invalido");
+            return null;
+        }
+
+        //Verificar se dia existe em mes
+        //meses com 31 dias
+        if(Arrays.asList(meses31).contains(mes)) {
+            //Verificar se dia maior que 31
+            if(dia > 31) {
+                System.out.println("Dia inserido invalido");
+                return null;
+            }
+        }
+        //meses com 30 dias
+        else if(Arrays.asList(meses30).contains(mes)) {
+            //Verificar se dia maior que 30
+            if(dia > 30) {
+                System.out.println("Dia inserido invalido");
+                return null;
+            }
+        }
+        //Fevereiro
+        else {
+            //Verificar se é ano bisexto
+            if(anoBisexto) {
+                //Verificar se dia é maior que 29
+                if(dia>29) {
+                    System.out.println("Dia inserido invalido");
+                    return null;
+                }
+            } else {
+                //Verificar se dia é maior que 28
+                if(dia>28) {
+                    System.out.println("Dia inserido invalido");
+                    return null;
+                }
+            }
+        }
+
+        parts = parts[3].split(":");
+
+        //Verificar hora
+        try {
+            hora = Integer.parseInt(parts[0]);
+        } catch(NumberFormatException e) {
+            System.out.println("Hora inserido invalido");
+            return null;
+        }
+
+        //Verificar se hora é maior que 23
+        if(hora>23) {
+            System.out.println("Hora inserido invalido");
+            return null;
+        }
+
+        //Verificar minutos
+        try {
+            minuto = Integer.parseInt(parts[1]);
+        } catch(NumberFormatException e) {
+            System.out.println("Minuto inserido invalido");
+            return null;
+        }
+
+        //Verificar se hora é maior que 59
+        if(minuto>59) {
+            System.out.println("Minuto inserido invalido");
+            return null;
+        }
+
+        out.set(ano, mes, dia, hora, minuto);
+
+        //Verificar se out é no futuro
+        if(out.compareTo(now) <= 0) {
+            System.out.println("Data inserida invalida");
+            return null;
+        }
+
+        return out;
+    }
+
+	//TODO -> criar curso
+	//TODO -> criar docente
+	//TODO -> criar nao docente
+	//Criar menu para a escolha de um docente da lista de Pessoas ou criar um, e devolver o docente
+	public static FuncionarioDocente escolhaListaDocentesPessoa(){
+		//TODO -> adicionar a funcionalidade de criar docente
+		int opcaoInteger;
+		Scanner scanner = new Scanner(System.in);
+		int i = 0;
+
+		//carregar todos os funcionarios para a lista funcionarios
+		ArrayList<FuncionarioDocente> docentes = getDocentesPessoas();
+
+        if(docentes == null) {
+            return null;
+        }
+
+		System.out.println("Escolha um docente:\n");
+
+		//imprimir a lista de funcionarios docentes obtida
+		for (FuncionarioDocente funcionarioDocente : docentes){
+			System.out.println("[" + i + "] " + funcionarioDocente.toStringDetailed());
+			i++;
+		}
+
+		System.out.print("\nOpcao: ");
+		try {
+			opcaoInteger = Integer.parseInt(scanner.nextLine());
+		} catch (NumberFormatException e) {
+			System.out.println("Insira uma opcao valida");
+			return null;
+		}
+
+		try {
+			return docentes.get(opcaoInteger);
+		} catch (IndexOutOfBoundsException e) {
+			System.out.println("Insira uma opcao valida");
+			return null;
+		}
+	}
+
+	private static String escolherEpoca() {
+        String[] epoca = {"Normal", "Recurso", "Especial"};
+        int i=0;
+        int opcao;
+        Scanner scanner = new Scanner(System.in);
+
+		System.out.println("Escolha uma epoca:\n");
+        for(String string : epoca) {
+            System.out.println("[" + i + "] " + string);
+            ++i;
+        }
+
+        System.out.print("\nOpcao: ");
+
+        try {
+            opcao = Integer.parseInt(scanner.nextLine());
+        } catch(NumberFormatException e) {
+            System.out.println("Opcao invalida");
+            return null;
+        }
+
+        try {
+            return epoca[opcao];
+        } catch(IndexOutOfBoundsException e) {
+            System.out.println("Opcao invalida");
+            return null;
+        }
+    }
+
+	private static int perguntarDuracao() {
+        Scanner scanner = new Scanner(System.in);
+
+		System.out.printf("Introduza a duracao do exame (em minutos): ");
+		try{
+			return Integer.parseInt(scanner.nextLine());
+		}catch(NumberFormatException e){
+			System.out.println("Numero de minutos invalido");
+			return 0;
+		}
+	}
+
     //Guardas dados em ficheiro
-    private static void guardarDados() throws IOException {
-        FileWriter cursosFile =  new FileWriter("cursos.txt");
-        for(Curso curso : cursos) {
-            cursosFile.write(curso.toString());
+    private static void guardarDados() {
+		//Guardar cursos
+        try {
+            FileOutputStream databaseCursos = new FileOutputStream("cursos.db");
+            ObjectOutputStream objectCursos = new ObjectOutputStream(databaseCursos);
+            objectCursos.writeObject(cursos);
+            objectCursos.close();
+            databaseCursos.close();
+        } catch (IOException e) {
+            System.out.println("Erro na escrita do ficheiro cursos.db");
+            return;
         }
 
-        cursosFile.write("END");
-        cursosFile.close();
-
-        FileWriter pessoasFile =  new FileWriter("pessoas.txt");
-        for(Pessoa pessoa : pessoas) {
-            pessoasFile.write(pessoa.toString());
+		//Guardar pessoas
+        try {
+            FileOutputStream databasePessoas = new FileOutputStream("pessoas.db");
+            ObjectOutputStream objectPessoas = new ObjectOutputStream(databasePessoas);
+            objectPessoas.writeObject(pessoas);
+            objectPessoas.close();
+            databasePessoas.close();
+        } catch (IOException e) {
+            System.out.println("Erro na escrita do ficheiro pessoas.db");
+            return;
         }
 
-        pessoasFile.write("END");
-        pessoasFile.close();
-
-        FileWriter examesFile =  new FileWriter("exames.txt");
-        for(Exame exame : exames) {
-            examesFile.write(exame.toString());
+		//Guardar exames
+        try {
+            FileOutputStream databaseExames = new FileOutputStream("exames.db");
+            ObjectOutputStream objectExames = new ObjectOutputStream(databaseExames);
+            objectExames.writeObject(exames);
+            objectExames.close();
+            databaseExames.close();
+        } catch (IOException e) {
+            System.out.println("Erro na escrita do ficheiro exames.db");
+            return;
         }
 
-        examesFile.write("END");
-        examesFile.close();
+		//Guardar salas
+        try {
+            FileOutputStream databaseSalas = new FileOutputStream("salas.db");
+            ObjectOutputStream objectSalas = new ObjectOutputStream(databaseSalas);
+            objectSalas.writeObject(salas);
+            objectSalas.close();
+            databaseSalas.close();
+        } catch (IOException e) {
+            System.out.println("Erro na escrita do ficheiro salas.db");
+            return;
+        }
 
-        System.out.printf("Data saved");
+		System.out.println("Dados gravados com sucessso");
     }
 
     public void guardarHistorico() {
 
     }
 
-    private static void carregarPessoas() throws IOException {
-        FileReader fileReader = new FileReader("pessoas.txt");
-        BufferedReader bufferedReader = new BufferedReader(fileReader);
-        String line;
-        String[] catcher;
-
-        FuncionarioDocente funcionarioDocente;
-        FuncionarioNaoDocente funcionarioNaoDocente;
-        Aluno aluno;
-
-        while((line = bufferedReader.readLine()) != null) {
-            catcher = line.split("»");
-
-            //Docente
-            if(catcher[catcher.length -1].equals("D")) {
-                funcionarioDocente = new FuncionarioDocente(catcher[0], catcher[1], Integer.parseInt(catcher[2]), catcher[3], catcher[4]);
-                pessoas.add(funcionarioDocente);
-            }
-
-            if(catcher[catcher.length -1].equals("N")) {
-                funcionarioNaoDocente = new FuncionarioNaoDocente(catcher[0], catcher[1], Integer.parseInt(catcher[2]), catcher[3], catcher[4]);
-                pessoas.add(funcionarioNaoDocente);
-            }
-
-            if(catcher[catcher.length -1].equals("A")) {
-                aluno = new Aluno(catcher[0], catcher[1], Integer.parseInt(catcher[2]), null, Integer.parseInt(catcher[3]), catcher[4]);
-                pessoas.add(aluno);
-            }
-
+    private static void carregarDados() {
+		//Carregar cursos
+        try {
+            FileInputStream databaseCursos = new FileInputStream("cursos.db");
+            ObjectInputStream objectCursos = new ObjectInputStream(databaseCursos);
+            cursos = (ArrayList<Curso>) objectCursos.readObject();
+        } catch (FileNotFoundException e) {
+            System.out.println("Ficheiro cursos.db nao encontrado");
+            return;
+        } catch (IOException e) {
+            System.out.println("Erro na leitura do ficheiro cursos.db");
+            return;
+        } catch (ClassNotFoundException e) {
+            System.out.println("Classe Curso nao encontrada");
+            return;
         }
 
-        fileReader.close();
-    }
-
-    private static void carregarCursos() throws IOException {
-        FileReader fileReader = new FileReader("cursos.txt");
-        BufferedReader bufferedReader = new BufferedReader(fileReader);
-        String line;
-        String[] catcher;
-        boolean aLerCurso = false;
-        boolean aLerDisciplina = false;
-
-        ArrayList<Disciplina> disciplinas = new ArrayList<>();
-        String nomeCurso;
-        int duracaoCurso;
-        String grauConfereCurso;
-        Curso curso;
-
-        ArrayList<FuncionarioDocente> outrosDocentes = new ArrayList<>();
-        ArrayList<Aluno> alunos = new ArrayList<>();
-        String nomeDisciplina = null;
-        FuncionarioDocente responsavelDisciplina = null;
-        Disciplina disciplina;
-
-        Aluno aluno;
-        FuncionarioDocente funcionarioDocente;
-
-        while((line = bufferedReader.readLine()) != null) {
-            if(line.charAt(0) == '\t' && line.charAt(1) == '\t') {
-                catcher = line.split("»");
-
-                aluno = null;
-                funcionarioDocente = null;
-
-                //Procurar pessoa com numero
-                for(Pessoa pessoa : pessoas) {
-                    if(pessoa instanceof FuncionarioDocente) {
-                        if(((FuncionarioDocente) pessoa).getNumMecanografico() == Integer.parseInt(catcher[1])) {
-                            funcionarioDocente = (FuncionarioDocente) pessoa;
-                            break;
-                        }
-                    }  else if(pessoa instanceof Aluno) {
-                        if(((Aluno) pessoa).getNumAluno() == Integer.parseInt(catcher[1])) {
-                            aluno = (Aluno) pessoa;
-                            break;
-                        }
-                    }
-                }
-
-                if(aluno != null) {
-                    alunos.add(aluno);
-                } else if(funcionarioDocente != null) {
-                    outrosDocentes.add(funcionarioDocente);
-                }
-
-            } else if(line.charAt(0) == '\t') {
-                catcher = line.split("»");
-
-                catcher[0] = catcher[0].replaceAll("\t", "");
-
-                nomeDisciplina = catcher[0];
-
-                for(Pessoa pessoa : pessoas) {
-                    if(pessoa instanceof FuncionarioDocente) {
-                        if(((FuncionarioDocente) pessoa).getNumMecanografico() == Integer.parseInt(catcher[1])) {
-                            responsavelDisciplina = (FuncionarioDocente) pessoa;
-                            break;
-                        }
-                    }
-                }
-
-                if(aLerDisciplina) {
-                    disciplina = new Disciplina(nomeDisciplina, responsavelDisciplina, outrosDocentes);
-
-                    for(Aluno auxAluno : alunos) {
-                        disciplina.inscreverAluno(auxAluno);
-                    }
-
-                    disciplinas.add(disciplina);
-                    outrosDocentes = new ArrayList<>();
-                    alunos = new ArrayList<>();
-                } else {
-                    aLerDisciplina = true;
-                }
-            } else {
-                catcher = line.split("»");
-                nomeCurso = catcher[0];
-                if(nomeCurso.equals("END")) {
-                    break;
-                }
-                duracaoCurso = Integer.parseInt(catcher[1]);
-                grauConfereCurso = catcher[2];
-                if(aLerCurso) {
-                    curso = new Curso(nomeCurso, duracaoCurso, grauConfereCurso, disciplinas);
-                    cursos.add(curso);
-                    disciplinas = new ArrayList<>();
-                } else {
-                    aLerCurso = true;
-                }
-            }
+        //Carregar pessoas
+        try {
+            FileInputStream databasePessoas = new FileInputStream("pessoas.db");
+            ObjectInputStream objectPessoas = new ObjectInputStream(databasePessoas);
+            pessoas = (ArrayList<Pessoa>) objectPessoas.readObject();
+        } catch (FileNotFoundException e) {
+            System.out.println("Ficheiro pessoas.db nao encontrado");
+            return;
+        } catch (IOException e) {
+            System.out.println("Erro na leitura do ficheiro pessoas.db");
+            return;
+        } catch (ClassNotFoundException e) {
+            System.out.println("Classe Pesssoa nao encontrada");
+            return;
         }
 
-        for(Curso auxCurso : cursos) {
-            for(Disciplina auxDisciplina : auxCurso.getDisciplinas()) {
-                for(Aluno auxAluno : auxDisciplina.getAlunosInscritos()) {
-                    auxAluno.setCurso(auxCurso);
-                }
-            }
+        //Carregar exames
+        try {
+            FileInputStream databaseExames = new FileInputStream("exames.db");
+            ObjectInputStream objectExames = new ObjectInputStream(databaseExames);
+            exames = (ArrayList<Exame>) objectExames.readObject();
+        } catch (FileNotFoundException e) {
+            System.out.println("Ficheiro exames.db nao encontrado");
+            return;
+        } catch (IOException e) {
+            System.out.println("Erro na leitura do ficheiro exames.db");
+            return;
+        } catch (ClassNotFoundException e) {
+            System.out.println("Classe Exame nao encontrada");
+            return;
         }
 
-        fileReader.close();
-    }
-
-    private static void carregarExames() throws IOException {
-        FileReader fileReader = new FileReader("exames.txt");
-        BufferedReader bufferedReader = new BufferedReader(fileReader);
-        String line;
-        String[] catcher;
-        String[] secondLevelCatcher;
-        String[] thirdLevelCatcher;
-        String[] meses = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
-
-        String disciplinaNome;
-        String salaNome;
-        String epoca;
-        int duracao;
-        int dia;
-        int mes;
-        int ano;
-        int hora;
-        int minuto;
-
-        Calendar calendar = Calendar.getInstance();
-
-        Exame exame;
-
-        while((line = bufferedReader.readLine()) != null) {
-            catcher = line.split("»");
-
-            disciplinaNome = catcher[0];
-
-            secondLevelCatcher = catcher[1].split(" ");
-
-            duracao = Integer.parseInt(secondLevelCatcher[0]);
-
-            //Calendar
-            dia = Integer.parseInt(secondLevelCatcher[1]);
-            mes = Arrays.asList(meses).indexOf(secondLevelCatcher[2]);
-            ano = Integer.parseInt(secondLevelCatcher[3]);
-
-            thirdLevelCatcher = secondLevelCatcher[4].split(":");
-
-            hora = Integer.parseInt(thirdLevelCatcher[0]);
-            minuto = Integer.parseInt(thirdLevelCatcher[1]);
-
-            calendar.set(ano, mes, dia, hora, minuto);
-            //End of Calendar
-
-            salaNome = catcher[2];
-
-            epoca = catcher[3];
-
-            //TODO
-            if(epoca.equals("Normal")) {
-
-            } else if(epoca.equals("Recurso")) {
-
-            } else if(epoca.equals("Especial")) {
-
-            }
+		//Carregar salas
+        try {
+            FileInputStream databaseSalas = new FileInputStream("salas.db");
+            ObjectInputStream objectSalas = new ObjectInputStream(databaseSalas);
+            salas = (ArrayList<Sala>) objectSalas.readObject();
+        } catch (FileNotFoundException e) {
+            System.out.println("Ficheiro salas.db nao encontrado");
+            return;
+        } catch (IOException e) {
+            System.out.println("Erro na leitura do ficheiro salas.db");
+            return;
+        } catch (ClassNotFoundException e) {
+            System.out.println("Classe Sala nao encontrada");
+            return;
         }
-
-        fileReader.close();
-    }
-
-    private static void carregarDados() throws IOException {
-        carregarPessoas();
-        carregarCursos();
-
     }
 
     private static void sair() {
@@ -1226,6 +1406,16 @@ public class Gestor {
         Exame auxExame;
         Funcionario auxFuncionario;
         int auxInt;
+		ArrayList<Disciplina> auxDisciplinas;
+        boolean repeat;
+        Disciplina auxDisciplina;
+        Calendar auxInicio;
+        int auxDuracao;
+        Sala auxSala;
+        boolean repeat2;
+        IntervaloTempo auxIntervaloTempo;
+        FuncionarioDocente auxDocenteResponsavel;
+        String auxEpoca;
 
         System.out.println("--- Gestor de Exames ---" + "\n");
         printMenu(menuPrincipal);
@@ -1265,7 +1455,7 @@ public class Gestor {
                         sc.nextLine();
 
                         break;
-                        
+
                     //Listar alunos inscritos num exame
                     case 1:
                         System.out.println("\n--- Listar alunos inscritos num exame ---\n");
@@ -1282,7 +1472,7 @@ public class Gestor {
                         sc.nextLine();
 
                         break;
-                        
+
                     //Listar exames de um aluno
                     case 2:
                         System.out.println("\n--- Listar exames de um aluno ---\n");
@@ -1291,6 +1481,7 @@ public class Gestor {
                             auxAluno = escolhaListaAlunosInscritosExame();
 
                             if(auxAluno != null) {
+								System.out.println("Exames\n:");
                                 auxAluno.listarExames(exames);
                             }
                         }
@@ -1316,7 +1507,7 @@ public class Gestor {
                         sc.nextLine();
 
                         break;
-                    
+
                     case 4:
                         System.out.println("---Listar exames de um funcionario---\n");
 
@@ -1332,7 +1523,7 @@ public class Gestor {
                         sc.nextLine();
 
                         break;
-                        
+
                     case 5:
                         System.out.println("---Listar notas---\n");
 
@@ -1358,14 +1549,94 @@ public class Gestor {
                 break;
             //Criar exames
             case 1:
-                break;
-            //Configurar exames
-            case 2:
-                System.out.println("--- Configurar exame ---\n");
-                if(examesDisponiveis()) {
-                    auxExame = escolhaListaExames();
-                    if(auxExame != null) {
-                        printMenu(menuConfigurarExame);
+				System.out.println("--- Criar Exames ---\n");
+
+                if (cursosDisponiveis()) {
+					auxDisciplinas = getDisciplinasCursos();
+				} else {
+                    break;
+                }
+
+				if (auxDisciplinas == null){
+					break;
+				}
+
+                do {
+					repeat = false;
+					auxDisciplina = escolhaListaDisciplinas(auxDisciplinas);
+
+					if(auxDisciplina == null) {
+						repeat = true;;
+					}
+				} while(repeat);
+
+                do {
+					repeat = false;
+					auxInicio = criarInicioExame();
+
+					if(auxInicio == null) {
+						repeat = true;;
+					}
+				} while(repeat);
+
+                do{
+					repeat = false;
+					auxDuracao = perguntarDuracao();
+
+					if(auxDuracao == 0) {
+						repeat = true;
+					}
+		        }while(repeat);
+
+                do {
+                    repeat2=false;
+					do {
+						repeat = false;
+						auxSala = escolhaListaSalas();
+
+						if(auxSala == null) {
+							repeat = true;;
+						}
+					} while(repeat);
+
+					if (auxSala.inserirIntervalo(auxInicio, auxDuracao)){
+						System.out.println("Sala ja ocupada na hora selecionada. Escolha outra sala");
+						repeat2=true;
+					}
+				} while(repeat2);
+
+				auxIntervaloTempo = new IntervaloTempo(auxInicio, auxDuracao);
+
+                auxDocenteResponsavel = escolhaListaDocentesPessoa();
+
+                do {
+                    repeat=false;
+                    auxEpoca = escolherEpoca();
+
+                    if(auxEpoca == null) {
+                        repeat=true;
+                    }
+                } while(repeat);
+
+                if(auxEpoca.equals("Especial")) {
+                    auxExame = new ExameEspecial(auxDisciplina, auxSala, auxDocenteResponsavel, auxIntervaloTempo);
+                } else {
+                    auxExame = new ExameNormalRecurso(auxDisciplina, auxSala, auxDocenteResponsavel, auxIntervaloTempo, auxEpoca);
+                }
+
+				if(exames.contains(auxExame)) {
+					System.out.println("O exame já existe no sistema");
+				} else {
+					exames.add(auxExame);
+				}
+				break;
+			//Configurar exames
+			case 2:
+				System.out.println("--- Configurar exame ---\n");
+				if(examesDisponiveis()) {
+					auxExame = escolhaListaExames();
+					if(auxExame != null) {
+						printMenu(menuConfigurarExame);
                         System.out.println("[3] Menu principal");
                         System.out.print("\nOpcao: ");
 
@@ -1431,7 +1702,6 @@ public class Gestor {
                     auxExame = escolhaListaExames();
                     if(auxExame != null) {
                         auxExame.lancarNotas();
-                        System.out.println("Notas lançadas");
                     }
                 }
 

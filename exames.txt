@@ -1,4 +1,0 @@
-Disciplina 1|30|05 Feb 2017 10:30:33|Sala1|Normal
-Disciplina 1|60|20 Feb 2017 14:00:34|Sala1|Recurso
-Disciplina 1|60|05 Mar 2017 17:30:34|Sala1|Especial
-	ewr|12|Nota nao lançada

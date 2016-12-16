@@ -2,7 +2,8 @@ package com.company;
 
 import java.util.ArrayList;
 
-public class Disciplina {
+public class Disciplina implements java.io.Serializable {
+	private static final long serialVersionUID = 3L;
     private String nome;
     private FuncionarioDocente responsavel;
     private ArrayList<FuncionarioDocente> outrosDocentes;
@@ -25,6 +26,10 @@ public class Disciplina {
         out.add(base2);
 
         return out;
+    }
+
+    public String toStringDetailed() {
+        return getNome() + " responsavel: " + responsavel.getNome();
     }
 
     //CONSTRUCTOR

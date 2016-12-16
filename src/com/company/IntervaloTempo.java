@@ -3,8 +3,8 @@ package com.company;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-public class IntervaloTempo {
-    
+public class IntervaloTempo implements java.io.Serializable {
+	private static final long serialVersionUID = 11L;
     private Calendar inicio;
     private Calendar fim;
     private int duracao;
@@ -15,7 +15,7 @@ public class IntervaloTempo {
     }
 
     public String toString() {
-        return duracao + " " + stringify(inicio);
+        return duracao + " minutos " + stringify(inicio);
     }
 
     //CONSTRUCTOR

@@ -1,6 +1,7 @@
 package com.company;
 
-public class ExameNormalRecurso extends Exame {
+public class ExameNormalRecurso extends Exame implements java.io.Serializable {
+	private static final long serialVersionUID = 6L;
     private String epoca;
 
     public String toString(){

@@ -3,7 +3,8 @@ package com.company;
 import java.sql.Array;
 import java.util.ArrayList;
 
-public class FuncionarioNaoDocente extends Funcionario {
+public class FuncionarioNaoDocente extends Funcionario implements java.io.Serializable {
+	private static final long serialVersionUID = 9L;
     private String cargo;
 
     public String toStringDetailed() {

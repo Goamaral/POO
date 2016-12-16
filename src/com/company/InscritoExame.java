@@ -1,6 +1,9 @@
 package com.company;
 
-public class InscritoExame {
+import java.text.DecimalFormat;
+
+public class InscritoExame implements java.io.Serializable {
+	private static final long serialVersionUID = 10L;
     private Aluno aluno;
     private String nota;
 
@@ -21,7 +24,8 @@ public class InscritoExame {
     }
 
     public void setNota(double nota) {
-        this.nota = Double.toString(nota);
+		DecimalFormat df = new DecimalFormat("#.00");
+        this.nota = df.format(nota).toString();
     }
 
     public InscritoExame(Aluno aluno, double nota) {

@@ -1,6 +1,7 @@
 package com.company;
 
-public abstract class Pessoa {
+public abstract class Pessoa implements java.io.Serializable {
+	private static final long serialVersionUID = 12L;
     private String nome;
     private String email;
 

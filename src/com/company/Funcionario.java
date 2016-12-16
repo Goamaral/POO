@@ -2,7 +2,8 @@ package com.company;
 
 import java.util.ArrayList;
 
-public abstract class Funcionario extends Pessoa {
+public abstract class Funcionario extends Pessoa implements java.io.Serializable {
+	private static final long serialVersionUID = 7L;
     private int numMecanografico;
     private String categoria;
 
@@ -48,4 +49,3 @@ public abstract class Funcionario extends Pessoa {
         this.categoria = categoria;
     }
 }
-

@@ -2,7 +2,8 @@ package com.company;
 
 import java.util.ArrayList;
 
-public class FuncionarioDocente extends Funcionario {
+public class FuncionarioDocente extends Funcionario implements java.io.Serializable {
+	private static final long serialVersionUID = 8L;
     private String areaDeInvestigacao;
     private ArrayList<IntervaloTempo> docenteOcupado = new ArrayList<>();
 

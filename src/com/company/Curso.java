@@ -2,7 +2,8 @@ package com.company;
 
 import java.util.ArrayList;
 
-public class Curso {
+public class Curso implements java.io.Serializable {
+	private static final long serialVersionUID = 2L;
     private String nome = "Nao existente";
     private int duracao;
     private String grauConfere;

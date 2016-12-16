@@ -5,7 +5,8 @@ import java.util.Calendar;
 import java.util.Random;
 import java.util.Scanner;
 
-public abstract class Exame {
+public abstract class Exame implements java.io.Serializable {
+	private static final long serialVersionUID = 4L;
     private Disciplina disciplina;
     private Sala sala;
     private IntervaloTempo data;
@@ -13,6 +14,7 @@ public abstract class Exame {
     private ArrayList<FuncionarioDocente> vigilantes = new ArrayList<>();
     private ArrayList<FuncionarioNaoDocente> assistentes = new ArrayList<>();
     private ArrayList<InscritoExame> resultados = new ArrayList<>();
+	private boolean notasLancadas = false;
 
     //PUBLIC METHODS
     public abstract String toString();
@@ -24,11 +26,7 @@ public abstract class Exame {
 
         for(InscritoExame inscritoExame : this.getResultados()) {
             System.out.print(inscritoExame.getAluno().getNumAluno() + " " + inscritoExame.getAluno().getNome());
-            if(Double.parseDouble(inscritoExame.getNota()) == 0) {
-                System.out.print(" Nota: ainda nao foi lançada\n");
-            } else {
-                System.out.print(" Nota: " + inscritoExame.getNota() + "\n");
-            }
+            System.out.print(" Nota: " + inscritoExame.getNota() + "\n");
         }
     }
 
@@ -51,14 +49,35 @@ public abstract class Exame {
 
     //TEST
     public void lancarNotas() {
+		if(this.notasLancadas == true) {
+			System.out.println("Notas ja lancadas");
+			return;
+		}
+
         Random r = new Random();
 
-        if( vigilantes.size()==0 || assistentes.size()==0 ) return;
+        if( vigilantes.size()==0 ) {
+			System.out.println("Nao existem vigilantes associados a este exame");
+			return;
+		}
 
-        for(InscritoExame inscrito : resultados) {
-            inscrito.setNota(20 * r.nextDouble());
+		if( assistentes.size()==0 ) {
+			System.out.println("Nao existem assistentes associados a este exame");
+			return;
+		}
+
+        if( resultados.size()==0 ) {
+            System.out.println("Nao existem alunos inscritos neste exame");
+            return;
         }
 
+        for(InscritoExame inscrito : resultados) {
+            inscrito.setNota((int)(20 * r.nextDouble()));
+        }
+
+		notasLancadas=true;
+
+		System.out.println("Notas lancadas");
     }
 
     //TEST

@@ -3,7 +3,8 @@ package com.company;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class Sala {
+public class Sala implements java.io.Serializable {
+	private static final long serialVersionUID = 13L;
     private ArrayList<IntervaloTempo> horasOcupadas;
     private String id;
 
@@ -15,6 +16,10 @@ public class Sala {
         }
 
         return out.toString();
+    }
+
+    public String toStringDetailed() {
+        return getId();
     }
 
     public String getId() {
