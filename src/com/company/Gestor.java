@@ -874,30 +874,6 @@ public class Gestor {
         }
     }
 
-	//Verificar se os cursos estão disponiveis
-	private static boolean cursosDisponiveis(){
-        return cursos.size() != 0;
-    }
-
-	//Obter disciplinas, nao repetidas de todos os cursos
-	private static ArrayList<Disciplina> getDisciplinasCursos(){
-		ArrayList<Disciplina> out = new ArrayList<>();
-
-		for(Curso curso : cursos){
-			for (Disciplina disciplina : curso.getDisciplinas()){
-				if(!out.contains(disciplina)){
-					out.add(disciplina);
-				}
-			}
-		}
-
-		if(out.size() == 0) {
-			return null;
-		}
-
-		return out;
-	}
-
 	//Criar menu de escolha de uma disciplina e devolver disciplina escolhida
 	private static Disciplina escolhaListaDisciplinas(ArrayList<Disciplina> disciplinas){
         int i = 0;
@@ -1124,7 +1100,6 @@ public class Gestor {
         return out;
     }
 
-	//TODO -> criar curso
 	//Criar menu para a escolha de um docente da lista de Pessoas ou criar um, e devolver o docente
 	private static FuncionarioDocente escolhaListaDocentesPessoa(){
 		int opcaoInteger;
@@ -1334,6 +1309,204 @@ public class Gestor {
         }
     }
 
+    public static Disciplina criarDisciplina(){
+        int i;
+        Disciplina out;
+        boolean repeat;
+        int opcao = -1;
+        String nome;
+        FuncionarioDocente responsavel;
+        ArrayList<FuncionarioDocente> outrosDocentes = new ArrayList<>();
+        Scanner scanner = new Scanner(System.in);
+        String[] menuDocentes = {"Adicionar docente", "Sair"};
+        FuncionarioDocente outroDocente;
+
+        //Pedir o nome da disciplina
+        System.out.print("Nome da disciplina: ");
+        nome = scanner.nextLine();
+
+        do {
+            repeat = false;
+            //Escolher funcionario docente
+            System.out.println("--- Escolha um docente para ser o responsável da disciplina ---\n");
+            responsavel = escolhaListaDocentesPessoa();
+
+            if(responsavel == null) {
+                repeat=true;
+            }
+        }while(repeat);
+
+        System.out.println("--- Escolha outros docentes para a disciplina ---\n");
+        do{
+            repeat = false;
+
+            System.out.println("Docentes: ");
+            //imprimir docentes ja existentes na disciplina
+            for(FuncionarioDocente docente : outrosDocentes){
+                System.out.println(docente.toString());
+            }
+
+            //escolher o que fazer
+            i=0;
+            System.out.printf("[%d] %s\n", i, menuDocentes[i]);
+            ++i;
+            System.out.printf("[%d] %s\n", i, menuDocentes[i]);
+
+            System.out.print("\nOpcao: ");
+
+            try{
+                opcao = Integer.parseInt(scanner.nextLine());
+            }catch(NumberFormatException e){
+                System.out.println("Opcao Invalida");
+                repeat = true;
+            }
+
+            if(!repeat) {
+                switch(opcao) {
+                    //caso tenha escolhido adicionar outo docente à disciplina
+                    case 0:
+                        outroDocente = escolhaListaDocentesPessoa();
+                        if (outroDocente == null) {
+                            repeat = true;
+                        }
+                        if (!repeat) {
+                            if (outrosDocentes.contains(outroDocente) || outroDocente.equals(responsavel)) {
+                                System.out.println("Docente ja na lista de docentes");
+                                repeat = true;
+                            } else {
+                                //adicionar o novo docente à lista de outos docentes
+                                outrosDocentes.add(outroDocente);
+                                repeat=true;
+                            }
+                        }
+                        break;
+                    case 1:
+                        if (outrosDocentes.size() == 0) {
+                            System.out.println("É necessário adicionar um docente à disciplina");
+                            repeat = true;
+                        }
+                        break;
+                    default:
+                        repeat=true;
+                }
+            }
+
+        }while(repeat);
+
+        out = new Disciplina(nome, responsavel, outrosDocentes);
+
+        return out;
+    }
+
+    private static Curso criarCurso(){
+        Curso out;
+        int opcao = -1;
+        boolean repeat;
+        int duracao = -1;
+        String nome;
+        String grauConfere = null;
+        ArrayList<Disciplina> disciplinasCurso = new ArrayList<>();
+        String[] graus = {"Licenciatura", "Mestrado", "Doutoramento"};
+        int i;
+
+        Scanner scanner = new Scanner(System.in);
+
+        do {
+            repeat = false;
+            //Pedir o nome do curso
+            System.out.print("Nome do curso: ");
+            nome = scanner.nextLine();
+
+            //Pedir a duracao, em anos, do curso
+            System.out.print("Duracao do curso(anos): ");
+            try{
+                duracao = Integer.parseInt(scanner.nextLine());
+            }catch(NumberFormatException e){
+                System.out.println("Opcao Invalida");
+                repeat=true;
+            }
+        }while(repeat);
+
+        do {
+            i=0;
+            repeat = false;
+            //Pedir o grau a que o curso confere;
+            System.out.println("Grau do curso: \n");
+
+            for(String grau : graus) {
+                System.out.printf("[%d] %s\n", i, grau);
+                ++i;
+            }
+
+            System.out.print("\nOpcao: ");
+
+            try {
+                opcao = Integer.parseInt(scanner.nextLine());
+            } catch(NumberFormatException e) {
+                System.out.println("Opcao invalida");
+                repeat = true;
+            }
+
+            if(!repeat) {
+                try {
+                    grauConfere = graus[opcao];
+                } catch(IndexOutOfBoundsException e) {
+                    System.out.println("Opcao invalida");
+                    repeat = true;
+                }
+            }
+        }while(repeat);
+
+        do{
+            repeat = false;
+
+            //Adicionar disciplinas ao curso
+            System.out.println("\n--- Adicionar disciplinas ao curso ---\n");
+
+            System.out.println("Disciplinas:");
+            //imprimir as disciplinas já existentes no curso
+            for (Disciplina umaDisciplinaCurso : disciplinasCurso){
+                System.out.println(umaDisciplinaCurso.toString());
+            }
+
+            System.out.println("");
+
+            //escolher o que fazer
+            System.out.println("[0] Adicionar uma disciplina");
+            System.out.println("[1] Sair");
+
+            System.out.print("\nOpcao: ");
+
+            try{
+                opcao = Integer.parseInt(scanner.nextLine());
+            }catch(NumberFormatException e){
+                System.out.println("Opcao Invalida");
+                repeat = true;
+            }
+
+            if(!repeat) {
+                //se escolheu adicionar uma disciplina
+                if (opcao == 0){
+                    //adicionar a nova disciplina à lista das disciplinas do curso
+                    disciplinasCurso.add(criarDisciplina());
+                    repeat = true;
+                } else {
+                    if(disciplinasCurso.size() == 0) {
+                        System.out.println("O curso tem que ter pelo menos uma disciplina");
+                        repeat = true;
+                    }
+                }
+            }
+
+        }while(repeat);
+
+        out = new Curso(nome, duracao, grauConfere, disciplinasCurso);
+
+        //adicionar o novo curso à lista global de cursos
+        cursos.add(out);
+        return out;
+    }
+
     private static void sair() {
         System.exit(0);
     }
@@ -1344,7 +1517,6 @@ public class Gestor {
         Exame auxExame;
         Funcionario auxFuncionario;
         int auxInt;
-		ArrayList<Disciplina> auxDisciplinas;
         boolean repeat;
         Disciplina auxDisciplina;
         Calendar auxInicio;
@@ -1354,6 +1526,7 @@ public class Gestor {
         IntervaloTempo auxIntervaloTempo;
         FuncionarioDocente auxDocenteResponsavel;
         String auxEpoca;
+        Curso auxCurso;
 
         System.out.println("--- Gestor de Exames ---" + "\n");
         printMenu(menuPrincipal);
@@ -1493,63 +1666,87 @@ public class Gestor {
                 break;
             //Criar exames
             case 1:
-				System.out.println("--- Criar Exames ---\n");
+                System.out.println("--- Criar Exames ---\n");
 
-                if (cursosDisponiveis()) {
-					auxDisciplinas = getDisciplinasCursos();
-				} else {
+                auxInt=0;
+                for(Curso curso : cursos) {
+                    System.out.printf("[%d] %s\n", auxInt, curso.toString());
+                    ++auxInt;
+                }
+
+                System.out.printf("[%d] Criar curso\n", auxInt);
+
+                System.out.print("\nOpcao: ");
+
+                try {
+                    auxInt = Integer.parseInt(sc.nextLine());
+                } catch(NumberFormatException e) {
+                    System.out.println("Opcao invalida");
                     break;
                 }
 
-				if (auxDisciplinas == null){
-					break;
-				}
+                try {
+                    auxCurso = cursos.get(auxInt);
+                } catch(IndexOutOfBoundsException e) {
+                    if(cursos.size() == auxInt) {
+                        auxCurso = criarCurso();
+                        if(auxCurso == null) {
+                            System.out.println("Opcao invalida");
+                            break;
+                        }
+                    }else{
+                        break;
+                    }
+                }
 
                 do {
-					repeat = false;
-					auxDisciplina = escolhaListaDisciplinas(auxDisciplinas);
+                    repeat = false;
 
-					if(auxDisciplina == null) {
-						repeat = true;
-					}
-				} while(repeat);
+                    auxDisciplina = escolhaListaDisciplinas(auxCurso.getDisciplinas());
+
+                    if(auxDisciplina == null) {
+                        repeat=true;
+                    }
+                } while(repeat);
 
                 do {
-					repeat = false;
-					auxInicio = criarInicioExame();
+                    repeat = false;
+                    auxInicio = criarInicioExame();
 
-					if(auxInicio == null) {
-						repeat = true;
-					}
-				} while(repeat);
+                    if(auxInicio == null) {
+                        repeat = true;
+                    }
+                } while(repeat);
 
                 do{
-					repeat = false;
-					auxDuracao = perguntarDuracao();
+                    repeat = false;
+                    auxDuracao = perguntarDuracao();
 
-					if(auxDuracao == 0) {
-						repeat = true;
-					}
-		        }while(repeat);
+                    if(auxDuracao == 0) {
+                        repeat = true;
+                    }
+                }while(repeat);
 
                 do {
                     repeat2=false;
-					do {
-						repeat = false;
-						auxSala = escolhaListaSalas();
 
-						if(auxSala == null) {
-							repeat = true;
-						}
-					} while(repeat);
+                    do {
+                        repeat = false;
+                        auxSala = escolhaListaSalas();
 
-					if (!auxSala.inserirIntervalo(auxInicio, auxDuracao)){
-						System.out.println("Sala ja ocupada na hora selecionada. Escolha outra sala");
-						repeat2=true;
-					}
-				} while(repeat2);
+                        if(auxSala == null) {
+                            repeat = true;;
+                        }
+                    } while(repeat);
 
-				auxIntervaloTempo = new IntervaloTempo(auxInicio, auxDuracao);
+                    if (!auxSala.inserirIntervalo(auxInicio, auxDuracao)){
+                        System.out.println("Sala ja ocupada na hora selecionada. Escolha outra sala");
+                        repeat2=true;
+                    }
+
+                } while(repeat2);
+
+                auxIntervaloTempo = new IntervaloTempo(auxInicio, auxDuracao);
 
                 auxDocenteResponsavel = escolhaListaDocentesPessoa();
 
@@ -1568,13 +1765,13 @@ public class Gestor {
                     auxExame = new ExameNormalRecurso(auxDisciplina, auxSala, auxDocenteResponsavel, auxIntervaloTempo, auxEpoca);
                 }
 
-				if(exames.contains(auxExame)) {
-					System.out.println("O exame já existe no sistema");
-				} else {
-					exames.add(auxExame);
-				}
-				break;
-			//Configurar exames
+                if(exames.contains(auxExame)) {
+                    System.out.println("O exame já existe no sistema");
+                } else {
+                    exames.add(auxExame);
+                }
+                break;
+            //Configurar exames
 			case 2:
 				System.out.println("--- Configurar exame ---\n");
 				if(examesDisponiveis()) {

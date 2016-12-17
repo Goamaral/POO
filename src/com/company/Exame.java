@@ -212,6 +212,7 @@ public abstract class Exame implements java.io.Serializable {
         this.sala = sala;
         sala.inserirIntervalo(intervaloTempo.getInicio(), intervaloTempo.getDuracao());
         this.docenteResponsavel = docenteResponsavel;
+        this.docenteResponsavel.preencherHorario(intervaloTempo);
         this.data = intervaloTempo;
     }
 
