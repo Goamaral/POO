@@ -1748,7 +1748,14 @@ public class Gestor {
 
                 auxIntervaloTempo = new IntervaloTempo(auxInicio, auxDuracao);
 
-                auxDocenteResponsavel = escolhaListaDocentesPessoa();
+                do {
+                    repeat = false;
+                    auxDocenteResponsavel = escolhaListaDocentesPessoa();
+                    if(!auxDisciplina.getResponsavel().equals(auxDocenteResponsavel) && !auxDisciplina.getOutrosDocentes().contains(auxDocenteResponsavel)) {
+                        System.out.println("Docente nao pertence à disciplina");
+                        repeat = true;
+                    }
+                } while(repeat);
 
                 do {
                     repeat=false;
